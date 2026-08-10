@@ -8,7 +8,9 @@
 <meta name="description" content="مدعوم — منصة SaaS متكاملة تجمع الدعم الفني، الواتساب السحابي، اختصار الروابط، الدومينات الفرعية والاشتراكات في مكان واحد.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<!-- الخط يُحمّل بشكل غير معطِّل: لو الشبكة بطيئة أو محجوبة تظهر الصفحة فوراً بخطوط النظام -->
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Cairo:wght@400;600;700;900&display=swap"
+      rel="stylesheet" media="print" onload="this.media='all';this.onload=null">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237C5CFF'/%3E%3Cstop offset='1' stop-color='%2322D3EE'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='26' fill='url(%23g)'/%3E%3Cpath d='M30 72V34c0-6 7-9 11-4l9 12 9-12c4-5 11-2 11 4v38' stroke='%23fff' stroke-width='9' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 
 <script>document.documentElement.className+=' js';</script>
@@ -188,8 +190,12 @@ main,header,footer{position:relative;z-index:1}
    ============================================================ */
 #bar{position:fixed;top:0;inset-inline:0;height:3px;z-index:999;
   background:linear-gradient(90deg,var(--p1),var(--p2),var(--p3));transform-origin:right;transform:scaleX(0)}
-#pre{position:fixed;inset:0;z-index:2000;background:var(--bg);display:grid;place-items:center;transition:opacity .7s var(--ease),visibility .7s}
-#pre.off{opacity:0;visibility:hidden}
+/* شبكة أمان: الـ preloader يختفي بالـ CSS وحده بعد 3.5 ثانية،
+   حتى لو الـ JS لم يعمل إطلاقاً (ملف ناقص، خطأ برمجي، أو JS معطّل) */
+#pre{position:fixed;inset:0;z-index:2000;background:var(--bg);display:grid;place-items:center;
+  transition:opacity .7s var(--ease),visibility .7s;animation:preKill .6s 3.5s forwards}
+#pre.off{opacity:0;visibility:hidden;animation:none}
+@keyframes preKill{to{opacity:0;visibility:hidden}}
 .pre-mark{width:74px;height:74px;border-radius:22px;background:linear-gradient(135deg,var(--p1),var(--p2));display:grid;place-items:center;
   color:#fff;font-size:30px;font-weight:900;font-family:var(--display);box-shadow:0 0 70px rgba(124,92,255,.7);animation:bounce 1.4s var(--ease) infinite}
 @keyframes bounce{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-16px) rotate(-8deg)}}
@@ -443,7 +449,10 @@ body.admin .svc .edit-pin{display:flex}
 /* contact */
 .ct-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:26px}
 .ct-info{padding:34px;display:grid;gap:18px;align-content:start}
-.ct-item{display:flex;gap:14px;align-items:flex-start}
+.ct-item{display:flex;gap:14px;align-items:flex-start;border-radius:14px;transition:transform .3s var(--ease)}
+a.ct-item:hover{transform:translateX(-5px)}
+a.ct-item:hover .ci{background:linear-gradient(140deg,var(--p1),var(--p2));color:#fff}
+.ct-item .ci{transition:background .3s,color .3s}
 .ct-item .ci{width:44px;height:44px;border-radius:14px;background:rgba(124,92,255,.16);color:#A78BFA;display:grid;place-items:center;font-size:19px;flex:none}
 .ct-item b{display:block;font-size:14.5px}
 .ct-item span{font-size:13px;color:var(--muted)}
@@ -836,6 +845,17 @@ td{padding:13px 16px;font-size:14px;vertical-align:middle}
       <p>باقة متكاملة من الخدمات المتطورة، تُدار بالكامل من لوحة واحدة وبأداء مؤسسي.</p>
     </div>
     <div class="svc-grid" id="svcGrid"></div>
+    <noscript>
+      <div class="svc-grid">
+        <article class="svc glass"><h3>الدعم الفني</h3><p>نظام تذاكر ذكي وإدارة شاملة للدعم الفني لعملائك على مدار الساعة.</p>
+          <div class="svc-foot"><a class="btn btn-primary btn-sm" href="https://mad3oom.com">الدخول للخدمة</a></div></article>
+        <article class="svc glass"><h3>الواتساب السحابي</h3><p>أرسل واستقبل رسائل واتساب عبر API سحابي متطوّر وبسرعة فائقة.</p>
+          <div class="svc-foot"><a class="btn btn-primary btn-sm" href="https://wa.mad3oom.com">الدخول للخدمة</a></div></article>
+        <article class="svc glass"><h3>اختصار الروابط</h3><p>اختصر روابطك وشاركها بسهولة مع إحصائيات مفصّلة لكل نقرة.</p></article>
+        <article class="svc glass"><h3>الدومينات الفرعية</h3><p>أنشئ وأدر دومينات فرعية لمشاريعك بسهولة وفي ثوانٍ معدودة.</p></article>
+        <article class="svc glass"><h3>الاشتراكات</h3><p>إدارة الاشتراكات والفواتير بسهولة واحترافية مع تجديد تلقائي.</p></article>
+      </div>
+    </noscript>
     <div style="text-align:center;margin-top:34px" id="addInline"></div>
   </div>
 </section>
@@ -909,7 +929,7 @@ td{padding:13px 16px;font-size:14px;vertical-align:middle}
     <div class="price-grid">
       <div class="plan glass spot rv">
         <h3>البداية</h3>
-        <div class="amt"><b class="pr" data-m="99" data-y="79">99</b><span>ر.س / شهرياً</span></div>
+        <div class="amt"><b class="pr" data-m="199" data-y="159">199</b><span>ج.م / شهرياً</span></div>
         <p class="desc">مثالية للمشاريع الناشئة والأفراد.</p>
         <ul>
           <li><svg class="ic"><use href="#i-check"/></svg> 1,000 رسالة واتساب شهرياً</li>
@@ -923,7 +943,7 @@ td{padding:13px 16px;font-size:14px;vertical-align:middle}
       <div class="plan pop glass spot rv">
         <span class="tag">الأكثر طلباً</span>
         <h3>الاحترافية</h3>
-        <div class="amt"><b class="pr" data-m="299" data-y="239">299</b><span>ر.س / شهرياً</span></div>
+        <div class="amt"><b class="pr" data-m="599" data-y="479">599</b><span>ج.م / شهرياً</span></div>
         <p class="desc">الخيار الأمثل للشركات النامية.</p>
         <ul>
           <li><svg class="ic"><use href="#i-check"/></svg> 25,000 رسالة واتساب شهرياً</li>
@@ -936,7 +956,7 @@ td{padding:13px 16px;font-size:14px;vertical-align:middle}
       </div>
       <div class="plan glass spot rv">
         <h3>المؤسسات</h3>
-        <div class="amt"><b class="pr" data-m="899" data-y="719">899</b><span>ر.س / شهرياً</span></div>
+        <div class="amt"><b class="pr" data-m="1799" data-y="1439">1799</b><span>ج.م / شهرياً</span></div>
         <p class="desc">لمن يحتاج قدرات ومرونة بلا حدود.</p>
         <ul>
           <li><svg class="ic"><use href="#i-check"/></svg> رسائل غير محدودة</li>
@@ -965,7 +985,7 @@ td{padding:13px 16px;font-size:14px;vertical-align:middle}
         <div class="stars"><svg class="ic ic-f"><use href="#i-star"/></svg><svg class="ic ic-f"><use href="#i-star"/></svg><svg class="ic ic-f"><use href="#i-star"/></svg><svg class="ic ic-f"><use href="#i-star"/></svg><svg class="ic ic-f"><use href="#i-star"/></svg></div>
         <div class="who">
           <span class="av" style="background:linear-gradient(140deg,#7C5CFF,#4F46E5)">أح</span>
-          <span><b>أحمد الشمري</b><span>مدير التقنية — متجر رواج</span></span>
+          <span><b>أحمد سعيد</b><span>مدير التقنية — متجر رواج</span></span>
         </div>
       </div>
       <div class="tst glass spot rv">
@@ -974,7 +994,7 @@ td{padding:13px 16px;font-size:14px;vertical-align:middle}
         <div class="stars"><svg class="ic ic-f"><use href="#i-star"/></svg><svg class="ic ic-f"><use href="#i-star"/></svg><svg class="ic ic-f"><use href="#i-star"/></svg><svg class="ic ic-f"><use href="#i-star"/></svg><svg class="ic ic-f"><use href="#i-star"/></svg></div>
         <div class="who">
           <span class="av" style="background:linear-gradient(140deg,#22D3EE,#0EA5E9)">سا</span>
-          <span><b>سارة العتيبي</b><span>مؤسِّسة — منصة تعلّم</span></span>
+          <span><b>سارة منير</b><span>مؤسِّسة — منصة تعلّم</span></span>
         </div>
       </div>
       <div class="tst glass spot rv">
@@ -1002,7 +1022,7 @@ td{padding:13px 16px;font-size:14px;vertical-align:middle}
       <details class="qa glass rv"><summary><span class="qn">٢</span> هل يمكنني ترقية أو إلغاء الباقة في أي وقت؟<svg class="ic"><use href="#i-plus"/></svg></summary><div class="ans">نعم. الترقية فورية ويُحتسب الفرق بالتناسب، والإلغاء متاح بنقرة واحدة دون رسوم أو التزام طويل الأجل.</div></details>
       <details class="qa glass rv"><summary><span class="qn">٣</span> كيف يعمل الواتساب السحابي؟<svg class="ic"><use href="#i-plus"/></svg></summary><div class="ans">نوفّر لك واجهة API متوافقة مع WhatsApp Cloud تتيح إرسال واستقبال الرسائل، الردود التلقائية، والقوالب المعتمدة — مع لوحة متابعة لحظية للحالة والتسليم.</div></details>
       <details class="qa glass rv"><summary><span class="qn">٤</span> هل بياناتي آمنة؟<svg class="ic"><use href="#i-plus"/></svg></summary><div class="ans">بياناتك مشفّرة أثناء النقل والتخزين، مع نسخ احتياطي تلقائي كل 6 ساعات وسجل تدقيق كامل. لا نشارك بياناتك مع أي طرف ثالث.</div></details>
-      <details class="qa glass rv"><summary><span class="qn">٥</span> ما طرق الدفع المتاحة؟<svg class="ic"><use href="#i-plus"/></svg></summary><div class="ans">نقبل مدى، فيزا، ماستركارد، Apple Pay، والتحويل البنكي للباقات السنوية وباقات المؤسسات.</div></details>
+      <details class="qa glass rv"><summary><span class="qn">٥</span> ما طرق الدفع المتاحة؟<svg class="ic"><use href="#i-plus"/></svg></summary><div class="ans">نقبل فودافون كاش، إنستاباي، فيزا وماستركارد، بالإضافة إلى التحويل البنكي للباقات السنوية وباقات المؤسسات.</div></details>
     </div>
   </div>
 </section>
@@ -1031,16 +1051,16 @@ td{padding:13px 16px;font-size:14px;vertical-align:middle}
     </div>
     <div class="ct-grid">
       <div class="ct-info glass rv">
-        <div class="ct-item"><span class="ci"><svg class="ic"><use href="#i-whatsapp"/></svg></span><span><b>واتساب</b><span dir="ltr">+966 55 000 0000</span></span></div>
-        <div class="ct-item"><span class="ci"><svg class="ic"><use href="#i-mail"/></svg></span><span><b>البريد الإلكتروني</b><span dir="ltr">support@mad3oom.com</span></span></div>
-        <div class="ct-item"><span class="ci"><svg class="ic"><use href="#i-phone"/></svg></span><span><b>الهاتف</b><span dir="ltr">+966 11 000 0000</span></span></div>
-        <div class="ct-item"><span class="ci"><svg class="ic"><use href="#i-pin"/></svg></span><span><b>المقر</b><span>الرياض، المملكة العربية السعودية</span></span></div>
+        <a class="ct-item" href="https://wa.me/201274000741" target="_blank" rel="noopener"><span class="ci"><svg class="ic"><use href="#i-whatsapp"/></svg></span><span><b>واتساب</b><span dir="ltr">+20 127 400 0741</span></span></a>
+        <a class="ct-item" href="mailto:support@mad3oom.com"><span class="ci"><svg class="ic"><use href="#i-mail"/></svg></span><span><b>البريد الإلكتروني</b><span dir="ltr">support@mad3oom.com</span></span></a>
+        <a class="ct-item" href="tel:+201274000741"><span class="ci"><svg class="ic"><use href="#i-phone"/></svg></span><span><b>الهاتف</b><span dir="ltr">+20 127 400 0741</span></span></a>
+        <div class="ct-item"><span class="ci"><svg class="ic"><use href="#i-pin"/></svg></span><span><b>المقر</b><span>القاهرة، جمهورية مصر العربية</span></span></div>
         <div class="ct-item"><span class="ci"><svg class="ic"><use href="#i-clock"/></svg></span><span><b>ساعات العمل</b><span>الدعم الفني متاح 24/7 طوال أيام الأسبوع</span></span></div>
       </div>
       <form class="form glass rv" id="ctForm" novalidate>
         <div class="f2">
           <div class="fld"><label for="cn">الاسم الكامل</label><input class="inp" id="cn" placeholder="اكتب اسمك" required></div>
-          <div class="fld"><label for="cp">رقم الجوال</label><input class="inp" id="cp" placeholder="05xxxxxxxx" inputmode="tel" required></div>
+          <div class="fld"><label for="cp">رقم الجوال</label><input class="inp" id="cp" placeholder="01xxxxxxxxx" inputmode="tel" required></div>
         </div>
         <div class="fld"><label for="ce">البريد الإلكتروني</label><input class="inp" id="ce" type="email" placeholder="name@company.com" required></div>
         <div class="fld"><label for="cs">الخدمة المطلوبة</label>
@@ -1064,7 +1084,7 @@ td{padding:13px 16px;font-size:14px;vertical-align:middle}
           <span class="brand-mark"><svg viewBox="0 0 100 100"><path d="M30 72V34c0-6 7-9 11-4l9 12 9-12c4-5 11-2 11 4v38" stroke="currentColor" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           <b data-bind="brand">مدعوم</b>
         </a>
-        <p>منصة سعودية متكاملة تجمع خدماتك التقنية في مكان واحد — بسرعة، أمان، ودعم عربي لا ينام.</p>
+        <p>منصة مصرية متكاملة تجمع خدماتك التقنية في مكان واحد — بسرعة، أمان، ودعم عربي لا ينام.</p>
         <div class="socials">
           <a href="#" aria-label="تويتر"><svg class="ic"><use href="#i-tw"/></svg></a>
           <a href="#" aria-label="إنستغرام"><svg class="ic"><use href="#i-ig"/></svg></a>
@@ -1082,14 +1102,14 @@ td{padding:13px 16px;font-size:14px;vertical-align:middle}
     </div>
     <div class="f-bot">
       <span>© <span id="yr">2026</span> <span data-bind="brand">مدعوم</span>. جميع الحقوق محفوظة.</span>
-      <span>صُنع بـ <svg class="ic"><use href="#i-heart"/></svg> في السعودية</span>
+      <span>صُنع بـ <svg class="ic"><use href="#i-heart"/></svg> في مصر</span>
     </div>
   </div>
 </footer>
 
 <!-- ===== FLOAT ACTIONS ===== -->
 <div class="fab">
-  <a href="https://wa.me/966550000000" target="_blank" rel="noopener" aria-label="واتساب"><svg class="ic"><use href="#i-whatsapp"/></svg></a>
+  <a href="https://wa.me/201274000741" target="_blank" rel="noopener" aria-label="واتساب"><svg class="ic"><use href="#i-whatsapp"/></svg></a>
   <button id="top" aria-label="للأعلى"><svg class="ic"><use href="#i-up"/></svg></button>
 </div>
 
@@ -1122,8 +1142,9 @@ td{padding:13px 16px;font-size:14px;vertical-align:middle}
     <p id="dtlD" style="color:var(--txt-2);font-size:15px;line-height:1.95"></p>
     <ul id="dtlFeat"></ul>
     <div style="display:flex;gap:10px;margin-top:24px;flex-wrap:wrap">
-      <a href="#contact" class="btn btn-primary" data-close style="flex:1">اطلب الخدمة <svg class="ic"><use href="#i-arrow"/></svg></a>
-      <a href="#pricing" class="btn btn-ghost" data-close>عرض الأسعار</a>
+      <a id="dtlGo" class="btn btn-primary" target="_blank" rel="noopener" style="flex:1;display:none">الدخول للخدمة <svg class="ic"><use href="#i-out"/></svg></a>
+      <a href="#contact" class="btn btn-ghost" data-close style="flex:1">اطلب الخدمة <svg class="ic"><use href="#i-arrow"/></svg></a>
+      <a href="#pricing" class="btn btn-dark" data-close>الأسعار</a>
     </div>
   </div>
 </div>
@@ -1145,6 +1166,9 @@ td{padding:13px 16px;font-size:14px;vertical-align:middle}
         </div>
       </div>
       <div class="fld"><label for="edDesc">الوصف المختصر *</label><input class="inp" id="edDesc" placeholder="سطر واحد يظهر داخل البطاقة"></div>
+      <div class="fld"><label for="edLink">رابط الخدمة (اختياري)</label>
+        <input class="inp" id="edLink" dir="ltr" placeholder="https://wa.mad3oom.com">
+        <span style="font-size:11.5px;color:var(--muted)">لو تركته فارغاً لن يظهر زر «الدخول للخدمة» في البطاقة.</span></div>
       <div class="fld"><label for="edLong">الوصف التفصيلي</label><textarea class="inp" id="edLong" placeholder="يظهر عند الضغط على «عرض التفاصيل»"></textarea></div>
       <div class="fld"><label for="edFeat">المميزات (كل ميزة بسطر)</label><textarea class="inp" id="edFeat" placeholder="ميزة أولى&#10;ميزة ثانية&#10;ميزة ثالثة"></textarea></div>
       <div class="fld"><label>الأيقونة</label><div class="pick" id="edIcons"></div></div>
@@ -1294,11 +1318,11 @@ var DEFAULT_SVC=[
   {id:'s1',title:'الدعم الفني',desc:'نظام تذاكر ذكي وإدارة شاملة للدعم الفني لعملائك على مدار الساعة.',
    long:'منصة تذاكر متكاملة تستقبل طلبات عملائك من كل القنوات في صندوق واحد، مع توزيع تلقائي على الفريق، تصنيف ذكي حسب الأولوية، وقاعدة معرفة تقلّل التذاكر المتكررة حتى 40%.',
    features:['صندوق موحّد لكل قنوات التواصل','توزيع تلقائي وذكي للتذاكر','قاعدة معرفة ومقالات مساعدة','تقارير أداء الفريق وزمن الرد','اتفاقيات مستوى خدمة SLA قابلة للتخصيص'],
-   icon:'i-headset',color:'violet',status:'active'},
+   icon:'i-headset',color:'violet',status:'active',link:'https://mad3oom.com'},
   {id:'s2',title:'الواتساب السحابي',desc:'أرسل واستقبل رسائل واتساب عبر API سحابي متطوّر وبسرعة فائقة.',
    long:'واجهة برمجية متوافقة مع WhatsApp Cloud API تتيح لك إرسال آلاف الرسائل، بناء ردود تلقائية، واستخدام القوالب المعتمدة — مع لوحة متابعة لحظية لحالة التسليم والقراءة.',
    features:['إرسال جماعي بقوالب معتمدة','ردود تلقائية وبوت محادثة','تقارير تسليم وقراءة لحظية','ربط سهل عبر REST API وWebhooks','أرقام متعددة وفرق عمل منفصلة'],
-   icon:'i-whatsapp',color:'green',status:'active'},
+   icon:'i-whatsapp',color:'green',status:'active',link:'https://wa.mad3oom.com'},
   {id:'s3',title:'اختصار الروابط',desc:'اختصر روابطك وشاركها بسهولة مع إحصائيات مفصّلة لكل نقرة.',
    long:'خدمة اختصار روابط احترافية بدومينك الخاص، مع تتبّع دقيق لكل نقرة: الدولة، الجهاز، المصدر والوقت — بالإضافة إلى روابط مؤقتة ومحمية بكلمة مرور.',
    features:['دومين مخصّص لروابطك','إحصائيات مفصّلة لكل نقرة','روابط محمية بكلمة مرور','تاريخ انتهاء تلقائي للروابط','رموز QR جاهزة للطباعة'],
@@ -1393,7 +1417,11 @@ function renderCards(){
       '<span class="svc-ic" style="background:'+c.g+'">'+ico(s.icon)+'</span>'+
       '<h3>'+esc(s.title)+'</h3>'+
       '<p>'+esc(s.desc)+'</p>'+
-      '<div class="svc-foot"><button class="btn btn-dark btn-sm js-dtl">عرض التفاصيل '+ico('i-arrow')+'</button></div>'+
+      '<div class="svc-foot">'+
+        '<button class="btn btn-dark btn-sm js-dtl">عرض التفاصيل '+ico('i-arrow')+'</button>'+
+        (s.link ? '<a class="btn btn-primary btn-sm" href="'+esc(s.link)+'" target="_blank" rel="noopener">'+
+                  'الدخول للخدمة '+ico('i-out')+'</a>' : '')+
+      '</div>'+
     '</article>';
   }).join('');
 
@@ -1409,7 +1437,10 @@ function renderCards(){
 
   // footer + contact select
   $('#fSvc').innerHTML=list.map(function(s){
-    return '<a href="#services">'+esc(s.title)+'</a>';}).join('') || '<a href="#services">الخدمات</a>';
+    return s.link
+      ? '<a href="'+esc(s.link)+'" target="_blank" rel="noopener">'+esc(s.title)+'</a>'
+      : '<a href="#services">'+esc(s.title)+'</a>';
+  }).join('') || '<a href="#services">الخدمات</a>';
   $('#cs').innerHTML='<option value="">— اختر الخدمة —</option>'+
     list.map(function(s){return '<option>'+esc(s.title)+'</option>';}).join('')+
     '<option>استشارة عامة</option>';
@@ -1435,6 +1466,9 @@ function openDetails(id){
   $('#dtlD').textContent=s.long||s.desc;
   $('#dtlFeat').innerHTML=(s.features||[]).map(function(f){
     return '<li>'+ico('i-check')+'<span>'+esc(f)+'</span></li>';}).join('');
+  var go=$('#dtlGo');
+  if(s.link){ go.style.display='inline-flex'; go.href=s.link; }
+  else { go.style.display='none'; go.removeAttribute('href'); }
   openOv('#dtlOv');
 }
 
@@ -1615,6 +1649,7 @@ function openEditor(id){
   $('#edT').textContent=s?'تعديل: '+s.title:'إضافة خدمة جديدة';
   $('#edName').value=s?s.title:'';
   $('#edDesc').value=s?s.desc:'';
+  $('#edLink').value=s?(s.link||''):'';
   $('#edLong').value=s?(s.long||''):'';
   $('#edFeat').value=s?((s.features||[]).join('\n')):'';
   $('#edStatus').value=s?s.status:'active';
@@ -1630,8 +1665,10 @@ $('#edForm').addEventListener('submit',function(e){
     var er=$('#edErr'); er.textContent='الرجاء تعبئة اسم الخدمة والوصف المختصر.';
     er.classList.remove('on'); void er.offsetWidth; er.classList.add('on'); return;
   }
+  var link=$('#edLink').value.trim();
+  if(link && !/^https?:\/\//i.test(link)) link='https://'+link;
   var data={
-    title:title, desc:desc,
+    title:title, desc:desc, link:link,
     long:$('#edLong').value.trim(),
     features:$('#edFeat').value.split('\n').map(function(x){return x.trim();}).filter(Boolean),
     icon:pickIcon, color:pickColor, status:$('#edStatus').value
@@ -1686,6 +1723,7 @@ $('#impFile').addEventListener('change',function(e){
       if(!Array.isArray(arr)) throw 0;
       services=arr.map(function(s){
         return {id:s.id||uid(),title:String(s.title||'بدون اسم'),desc:String(s.desc||''),long:String(s.long||''),
+                link:/^https?:\/\//i.test(s.link||'')?s.link:'',
                 features:Array.isArray(s.features)?s.features:[],icon:ICONS.indexOf(s.icon)>-1?s.icon:'i-box',
                 color:COLORS[s.color]?s.color:'violet',status:s.status==='draft'?'draft':'active'};
       });
@@ -1824,4 +1862,97 @@ function counters(){
 /* marquee */
 var MQ=[['i-headset','دعم فني 24/7'],['i-whatsapp','واتساب سحابي'],['i-link','اختصار روابط'],['i-globe','دومينات فرعية'],
         ['i-crown','إدارة اشتراكات'],['i-shield','أمان مؤسسي'],['i-bolt','أداء فائق'],['i-code','واجهة API'],
-        ['i-cloud','بنية سحابية'],['i-
+        ['i-cloud','بنية سحابية'],['i-db','نسخ احتياطي']];
+$('#marq').innerHTML=(MQ.concat(MQ)).map(function(m){
+  return '<span>'+ico(m[0])+m[1]+'</span>';}).join('');
+
+/* mini charts */
+$('#bars').innerHTML=[35,58,44,72,54,88,66,96].map(function(h,i){
+  return '<i style="height:'+h+'%;animation-delay:'+(i*80)+'ms"></i>';}).join('');
+var up=''; for(var i=0;i<26;i++) up+='<i class="'+(i===9||i===19?'bad':'')+'"></i>';
+$('#uptime').innerHTML=up;
+
+/* live mock numbers */
+(function(){
+  var a=1248,b=856;
+  setInterval(function(){
+    if(document.hidden) return;
+    a+=Math.floor(Math.random()*4); b+=Math.random()<.45?1:0;
+    var e1=$('#mv1'), e2=$('#mv2');
+    if(e1) e1.textContent=a.toLocaleString('en-US');
+    if(e2) e2.textContent=b.toLocaleString('en-US');
+  },3200);
+})();
+
+/* pricing toggle */
+var yearly=false;
+function setBilling(y){
+  yearly=y;
+  $('#sw').classList.toggle('on',y);
+  $('#lblY').classList.toggle('on',y);
+  $('#lblM').classList.toggle('on',!y);
+  $$('.pr').forEach(function(el){
+    var to=parseInt(y?el.dataset.y:el.dataset.m,10), from=parseInt(el.textContent,10)||to, t0=performance.now();
+    (function step(t){
+      var p=Math.min((t-t0)/450,1), e=1-Math.pow(1-p,3);
+      el.textContent=Math.round(from+(to-from)*e);
+      if(p<1) requestAnimationFrame(step);
+    })(t0);
+  });
+}
+$('#sw').addEventListener('click',function(){setBilling(!yearly);});
+$('#lblM').addEventListener('click',function(){setBilling(false);});
+$('#lblY').addEventListener('click',function(){setBilling(true);});
+$$('[data-plan]').forEach(function(b){
+  b.addEventListener('click',function(){
+    toast('تم اختيار باقة «'+b.dataset.plan+'» — أكمل بياناتك للمتابعة','info');
+    document.getElementById('contact').scrollIntoView({behavior:'smooth'});
+    setTimeout(function(){$('#cn').focus();},700);
+  });
+});
+
+/* contact form */
+$('#ctForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  var n=$('#cn').value.trim(), p=$('#cp').value.trim(), m=$('#ce').value.trim();
+  if(!n||!p||!m) return toast('الرجاء تعبئة الحقول المطلوبة','err');
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(m)) return toast('البريد الإلكتروني غير صحيح','err');
+  toast('تم استلام طلبك يا '+n.split(' ')[0]+' — سنتواصل معك قريباً');
+  this.reset();
+});
+
+/* faq: one open at a time */
+$$('.qa').forEach(function(d){
+  d.addEventListener('toggle',function(){
+    if(d.open) $$('.qa').forEach(function(o){ if(o!==d) o.open=false; });
+  });
+});
+
+/* year */
+$('#yr').textContent=new Date().getFullYear();
+
+/* ============================================================
+   BOOT — كل خطوة معزولة، فشل أي جزء لا يوقف باقي الصفحة
+   ============================================================ */
+function hidePre(){ var p=$('#pre'); if(p) p.classList.add('off'); }
+window.addEventListener('load',function(){ setTimeout(hidePre,400); });
+setTimeout(hidePre,2600);
+
+function safe(name,fn){ try{ fn(); }catch(e){ if(window.console) console.error('[مدعوم] فشل في: '+name,e); } }
+
+safe('applyConfig',applyConfig);
+safe('renderCards',function(){
+  var on=false;
+  try{ on=sessionStorage.getItem(KEY_SESS)==='1'; }catch(e){}
+  if(on) setAdmin(true); else renderCards();
+});
+safe('observeReveal',observeReveal);
+safe('revealVisible',revealVisible);
+safe('counters',counters);
+safe('onScroll',onScroll);
+safe('setBilling',function(){ setBilling(false); });
+
+})();
+</script>
+</body>
+</html>
