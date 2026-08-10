@@ -1052,7 +1052,7 @@ td{padding:13px 16px;font-size:14px;vertical-align:middle}
     <div class="ct-grid">
       <div class="ct-info glass rv">
         <a class="ct-item" href="https://wa.me/201274000741" target="_blank" rel="noopener"><span class="ci"><svg class="ic"><use href="#i-whatsapp"/></svg></span><span><b>واتساب</b><span dir="ltr">+20 127 400 0741</span></span></a>
-        <a class="ct-item" href="mailto:support@mad3oom.com"><span class="ci"><svg class="ic"><use href="#i-mail"/></svg></span><span><b>البريد الإلكتروني</b><span dir="ltr">support@mad3oom.com</span></span></a>
+        <a class="ct-item" href="mailto:support@mad3oom.online"><span class="ci"><svg class="ic"><use href="#i-mail"/></svg></span><span><b>البريد الإلكتروني</b><span dir="ltr">support@mad3oom.online</span></span></a>
         <a class="ct-item" href="tel:+201274000741"><span class="ci"><svg class="ic"><use href="#i-phone"/></svg></span><span><b>الهاتف</b><span dir="ltr">+20 127 400 0741</span></span></a>
         <div class="ct-item"><span class="ci"><svg class="ic"><use href="#i-pin"/></svg></span><span><b>المقر</b><span>القاهرة، جمهورية مصر العربية</span></span></div>
         <div class="ct-item"><span class="ci"><svg class="ic"><use href="#i-clock"/></svg></span><span><b>ساعات العمل</b><span>الدعم الفني متاح 24/7 طوال أيام الأسبوع</span></span></div>
@@ -1067,7 +1067,11 @@ td{padding:13px 16px;font-size:14px;vertical-align:middle}
           <select class="inp" id="cs"></select>
         </div>
         <div class="fld"><label for="cm">تفاصيل الطلب</label><textarea class="inp" id="cm" placeholder="اكتب تفاصيل مشروعك أو استفسارك..."></textarea></div>
-        <button class="btn btn-primary btn-block" type="submit">إرسال الطلب <svg class="ic"><use href="#i-arrow"/></svg></button>
+        <div style="position:absolute;inset-inline-start:-9999px;opacity:0" aria-hidden="true">
+          <label for="cw">لا تملأ هذا الحقل</label>
+          <input id="cw" name="website" tabindex="-1" autocomplete="off">
+        </div>
+        <button class="btn btn-primary btn-block" type="submit" id="ctBtn">إرسال الطلب <svg class="ic"><use href="#i-arrow"/></svg></button>
       </form>
     </div>
   </div>
@@ -1123,11 +1127,11 @@ td{padding:13px 16px;font-size:14px;vertical-align:middle}
     </div>
     <div class="err" id="lgErr"></div>
     <form id="lgForm" style="display:grid;gap:15px">
-      <div class="fld"><label for="lgU">اسم المستخدم</label><input class="inp" id="lgU" autocomplete="username" placeholder="admin"></div>
+      <div class="fld"><label for="lgU">البريد الإلكتروني</label><input class="inp" id="lgU" type="email" dir="ltr" autocomplete="username" placeholder="you@mad3oom.online"></div>
       <div class="fld"><label for="lgP">كلمة المرور</label><input class="inp" id="lgP" type="password" autocomplete="current-password" placeholder="••••••••"></div>
-      <button class="btn btn-primary btn-block" type="submit"><svg class="ic"><use href="#i-in"/></svg> دخول</button>
+      <button class="btn btn-primary btn-block" type="submit" id="lgBtn"><svg class="ic"><use href="#i-in"/></svg> دخول</button>
     </form>
-    <div class="hint">بيانات الدخول الافتراضية: <code>admin</code> / <code>admin123</code></div>
+    <div class="hint">استخدم حساب الإدارة الخاص بك في منصة مدعوم — الدخول عبر Supabase Auth.</div>
   </div>
 </div>
 
@@ -1174,7 +1178,7 @@ td{padding:13px 16px;font-size:14px;vertical-align:middle}
       <div class="fld"><label>الأيقونة</label><div class="pick" id="edIcons"></div></div>
       <div class="fld"><label>اللون</label><div class="pick cpick" id="edColors"></div></div>
       <div style="display:flex;gap:10px;margin-top:6px">
-        <button class="btn btn-primary" type="submit" style="flex:1"><svg class="ic"><use href="#i-check"/></svg> حفظ</button>
+        <button class="btn btn-primary" type="submit" id="edSave" style="flex:1"><svg class="ic"><use href="#i-check"/></svg> حفظ</button>
         <button class="btn btn-dark" type="button" data-close>إلغاء</button>
       </div>
     </form>
@@ -1204,6 +1208,7 @@ td{padding:13px 16px;font-size:14px;vertical-align:middle}
     </a>
     <div class="tabs" style="margin-inline-start:auto">
       <button class="on" data-tab="t1">الخدمات</button>
+      <button data-tab="t4">الطلبات <span id="leadsDot" style="display:none;background:#FB7185;color:#fff;border-radius:99px;padding:1px 7px;font-size:11px;margin-inline-start:4px">0</span></button>
       <button data-tab="t2">محتوى الصفحة</button>
       <button data-tab="t3">الإعدادات</button>
     </div>
@@ -1226,7 +1231,7 @@ td{padding:13px 16px;font-size:14px;vertical-align:middle}
         <button class="btn btn-dark btn-sm" id="expBtn"><svg class="ic"><use href="#i-dl"/></svg> تصدير</button>
         <button class="btn btn-dark btn-sm" id="impBtn"><svg class="ic"><use href="#i-ul"/></svg> استيراد</button>
         <input type="file" id="impFile" accept="application/json" hidden>
-        <button class="btn btn-dark btn-sm" id="rstBtn"><svg class="ic"><use href="#i-refresh"/></svg> استعادة الافتراضي</button>
+        <button class="btn btn-dark btn-sm" id="rstBtn"><svg class="ic"><use href="#i-refresh"/></svg> إعادة التحميل</button>
       </div>
       <div class="tbl-wrap">
         <div class="tbl-scroll">
@@ -1241,6 +1246,29 @@ td{padding:13px 16px;font-size:14px;vertical-align:middle}
         <div class="empty" id="tblEmpty" style="display:none">
           <svg class="ic"><use href="#i-box"/></svg>
           <p>لا توجد خدمات مطابقة. أضف خدمة جديدة للبدء.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: LEADS -->
+    <div class="tab" id="t4">
+      <div class="tools">
+        <button class="btn btn-dark btn-sm" id="leadsRefresh"><svg class="ic"><use href="#i-refresh"/></svg> تحديث</button>
+        <span style="font-size:13px;color:var(--muted)">تصل نسخة من كل طلب على <b dir="ltr">support@mad3oom.online</b></span>
+      </div>
+      <div class="tbl-wrap">
+        <div class="tbl-scroll">
+          <table>
+            <thead><tr>
+              <th>الاسم</th><th>الجوال</th><th>البريد</th><th>الخدمة</th>
+              <th>التفاصيل</th><th style="width:120px">التاريخ</th><th style="width:96px">الحالة</th>
+            </tr></thead>
+            <tbody id="leadsBody"></tbody>
+          </table>
+        </div>
+        <div class="empty" id="leadsEmpty" style="display:none">
+          <svg class="ic"><use href="#i-mail"/></svg>
+          <p>لا توجد طلبات بعد.</p>
         </div>
       </div>
     </div>
@@ -1266,25 +1294,25 @@ td{padding:13px 16px;font-size:14px;vertical-align:middle}
     <div class="tab" id="t3">
       <div style="max-width:560px;display:grid;gap:16px">
         <div class="kpi" style="padding:26px">
-          <h3 style="font-size:18px;margin-bottom:6px">بيانات الدخول</h3>
-          <p style="color:var(--muted);font-size:13.5px;margin-bottom:20px">غيّر اسم المستخدم وكلمة المرور الخاصة بلوحة الإدارة.</p>
-          <div class="err" id="stErr"></div>
-          <form id="stForm" style="display:grid;gap:15px">
-            <div class="fld"><label for="stU">اسم المستخدم</label><input class="inp" id="stU"></div>
-            <div class="fld"><label for="stP">كلمة المرور الجديدة</label><input class="inp" id="stP" type="password" placeholder="اتركها فارغة لعدم التغيير"></div>
-            <div class="fld"><label for="stP2">تأكيد كلمة المرور</label><input class="inp" id="stP2" type="password" placeholder="أعد كتابة كلمة المرور"></div>
-            <button class="btn btn-primary" type="submit" style="justify-self:start"><svg class="ic"><use href="#i-check"/></svg> تحديث البيانات</button>
-          </form>
+          <h3 style="font-size:18px;margin-bottom:6px">الحساب والاتصال</h3>
+          <div style="display:grid;gap:12px;margin-top:16px;font-size:14px">
+            <div style="display:flex;justify-content:space-between;gap:12px;padding-bottom:10px;border-bottom:1px solid var(--stroke)">
+              <span style="color:var(--muted)">حالة قاعدة البيانات</span><b id="stConn">—</b></div>
+            <div style="display:flex;justify-content:space-between;gap:12px;padding-bottom:10px;border-bottom:1px solid var(--stroke)">
+              <span style="color:var(--muted)">الحساب</span><b id="stUser" dir="ltr">—</b></div>
+            <div style="display:flex;justify-content:space-between;gap:12px">
+              <span style="color:var(--muted)">وجهة طلبات التواصل</span><b dir="ltr">support@mad3oom.online</b></div>
+          </div>
+          <p style="color:var(--muted);font-size:13px;line-height:1.9;margin-top:18px">
+            تسجيل الدخول يتم عبر Supabase Auth بحساب الإدارة نفسه المستخدم في المنصة.
+            لتغيير كلمة المرور أو إضافة مدير جديد، استخدم لوحة تحكم Supabase — لم تعد كلمة المرور مخزّنة في هذه الصفحة إطلاقاً.
+          </p>
         </div>
-        <div class="kpi" style="padding:26px;border-color:rgba(251,113,133,.24)">
-          <h3 style="font-size:18px;margin-bottom:6px">منطقة الخطر</h3>
-          <p style="color:var(--muted);font-size:13.5px;margin-bottom:18px">حذف كل البيانات المحفوظة محلياً وإعادة الموقع لحالته الأصلية.</p>
-          <button class="btn btn-danger btn-sm" id="wipeBtn"><svg class="ic"><use href="#i-trash"/></svg> مسح كل البيانات</button>
+        <div class="kpi" style="padding:26px">
+          <h3 style="font-size:18px;margin-bottom:6px">النسخ الاحتياطي</h3>
+          <p style="color:var(--muted);font-size:13.5px;margin-bottom:18px">تصدير نسخة من الخدمات والمحتوى كملف JSON.</p>
+          <button class="btn btn-dark btn-sm" id="expBtn2"><svg class="ic"><use href="#i-dl"/></svg> تصدير نسخة</button>
         </div>
-        <p style="font-size:12.5px;color:var(--muted);line-height:1.9">
-          ملاحظة: هذه اللوحة تحفظ البيانات في متصفحك (localStorage) وهي مناسبة للعرض والتجارب.
-          عند الربط بخادم حقيقي، استبدل دوال <code style="background:rgba(124,92,255,.16);color:#C4B5FD;padding:1px 6px;border-radius:5px">DB.load</code> و<code style="background:rgba(124,92,255,.16);color:#C4B5FD;padding:1px 6px;border-radius:5px">DB.save</code> بطلبات API.
-        </p>
       </div>
     </div>
   </div>
@@ -1299,7 +1327,16 @@ td{padding:13px 16px;font-size:14px;vertical-align:middle}
 /* ============================================================
    CONFIG
    ============================================================ */
-var KEY_SVC='mad3oom_services_v1', KEY_CFG='mad3oom_config_v1', KEY_AUTH='mad3oom_auth_v1', KEY_SESS='mad3oom_session_v1';
+/* اتصال Supabase — المفتاح العام (publishable) آمن للنشر:
+   الحماية الفعلية في سياسات RLS على الخادم، لا في إخفاء المفتاح. */
+var SB={
+  url:'https://srnelrdpqkcntbgudyto.supabase.co',
+  key:'sb_publishable_0pvB8_xD0txjdJBkYqXMyg__jKMw71W',
+  token:null
+};
+var online=false;
+
+var KEY_SVC='mad3oom_services_v1', KEY_CFG='mad3oom_config_v1', KEY_SESS='mad3oom_session_v1';
 
 var ICONS=['i-headset','i-whatsapp','i-link','i-globe','i-crown','i-cloud','i-shield','i-bolt','i-chart','i-rocket','i-code','i-db','i-lock','i-mail','i-users','i-gear','i-sparkle','i-box','i-phone','i-clock'];
 
@@ -1343,24 +1380,76 @@ var DEFAULT_CFG={
   heroSub:'نوفّر لك مجموعة متكاملة من الخدمات التقنية المتطورة لتحسين أداء عملك وتسهيل إدارة أعمالك — بواجهة واحدة، وفريق دعم لا ينام.'
 };
 
-var DEFAULT_AUTH={u:'admin',p:'admin123'};
-
 /* ============================================================
-   STORAGE
+   STORAGE — كاش محلي فقط، مصدر الحقيقة هو Supabase
    ============================================================ */
 var DB={
   load:function(k,fb){
     try{var v=localStorage.getItem(k);return v?JSON.parse(v):JSON.parse(JSON.stringify(fb));}
     catch(e){return JSON.parse(JSON.stringify(fb));}
   },
-  save:function(k,v){ try{localStorage.setItem(k,JSON.stringify(v));return true;}catch(e){toast('تعذّر الحفظ في المتصفح','err');return false;} },
+  save:function(k,v){ try{localStorage.setItem(k,JSON.stringify(v));return true;}catch(e){return false;} },
   del:function(k){ try{localStorage.removeItem(k);}catch(e){} }
 };
 
 var services=DB.load(KEY_SVC,DEFAULT_SVC);
 var config  =DB.load(KEY_CFG,DEFAULT_CFG);
-var auth    =DB.load(KEY_AUTH,DEFAULT_AUTH);
 var isAdmin =false;
+
+/* ============================================================
+   SUPABASE CLIENT — عبر fetch مباشرة، بدون أي مكتبة خارجية
+   ============================================================ */
+function sbFetch(path,opts){
+  opts=opts||{};
+  var h={'apikey':SB.key,'Content-Type':'application/json'};
+  h.Authorization='Bearer '+(SB.token||SB.key);
+  if(opts.prefer) h.Prefer=opts.prefer;
+  return fetch(SB.url+'/rest/v1/'+path,{
+    method:opts.method||'GET',
+    headers:h,
+    body:opts.body?JSON.stringify(opts.body):undefined
+  }).then(function(r){
+    if(!r.ok) return r.text().then(function(t){ throw new Error(t||('HTTP '+r.status)); });
+    if(r.status===204) return null;
+    return r.text().then(function(t){ return t?JSON.parse(t):null; });
+  });
+}
+
+/* تحويل بين صف قاعدة البيانات وكائن الواجهة */
+function fromRow(r){
+  return {id:r.id,title:r.title,desc:r.description,long:r.long_description||'',link:r.link||'',
+          features:Array.isArray(r.features)?r.features:[],icon:r.icon,color:r.color,status:r.status};
+}
+function toRow(s,i){
+  var row={title:s.title,description:s.desc,long_description:s.long||'',link:s.link||'',
+           features:s.features||[],icon:s.icon,color:s.color,status:s.status};
+  if(typeof i==='number') row.sort_order=i;
+  return row;
+}
+
+function loadFromServer(){
+  return Promise.all([
+    sbFetch('landing_services?select=*&order=sort_order.asc'),
+    sbFetch('landing_config?select=key,value')
+  ]).then(function(res){
+    if(Array.isArray(res[0])) services=res[0].map(fromRow);
+    if(Array.isArray(res[1])) res[1].forEach(function(c){
+      if(Object.prototype.hasOwnProperty.call(config,c.key)) config[c.key]=c.value;
+    });
+    online=true;
+    DB.save(KEY_SVC,services); DB.save(KEY_CFG,config);   // كاش للزيارة القادمة
+    return true;
+  }).catch(function(e){
+    online=false;
+    if(window.console) console.warn('[مدعوم] تعذّر الاتصال بقاعدة البيانات — عرض آخر نسخة محفوظة.',e);
+    return false;
+  });
+}
+
+function requireOnline(){
+  if(!online){ toast('لا يوجد اتصال بقاعدة البيانات — تعذّر الحفظ','err'); return false; }
+  return true;
+}
 
 /* ============================================================
    HELPERS
@@ -1486,10 +1575,17 @@ function applyConfig(){
   $('#cfSub').value=config.heroSub;
 }
 $('#cfSave').addEventListener('click',function(){
+  if(!requireOnline()) return;
   config.brand=$('#cfBrand').value.trim()||DEFAULT_CFG.brand;
   config.heroTitle=$('#cfTitle').value.trim()||DEFAULT_CFG.heroTitle;
   config.heroSub=$('#cfSub').value.trim()||DEFAULT_CFG.heroSub;
-  DB.save(KEY_CFG,config); applyConfig(); toast('تم حفظ محتوى الصفحة');
+  DB.save(KEY_CFG,config); applyConfig();
+  Promise.all(Object.keys(config).map(function(k){
+    return sbFetch('landing_config?key=eq.'+encodeURIComponent(k),
+                   {method:'PATCH',body:{value:config[k]}});
+  }))
+  .then(function(){ toast('تم حفظ محتوى الصفحة'); })
+  .catch(function(e){ console.error(e); toast('تعذّر حفظ المحتوى','err'); });
 });
 
 /* ============================================================
@@ -1504,28 +1600,80 @@ function setAdmin(on){
 $('#loginBtn').addEventListener('click',function(){
   $('#lgErr').classList.remove('on'); $('#lgForm').reset(); openOv('#loginOv'); setTimeout(function(){$('#lgU').focus();},250);
 });
+/* ترجمة رسائل Supabase Auth الإنجليزية */
+function authMsg(raw){
+  var s=String(raw||'').toLowerCase();
+  if(s.indexOf('invalid login')>-1||s.indexOf('invalid credentials')>-1) return 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+  if(s.indexOf('email not confirmed')>-1) return 'لم يتم تفعيل هذا البريد الإلكتروني بعد.';
+  if(s.indexOf('too many')>-1||s.indexOf('rate limit')>-1) return 'محاولات كثيرة — انتظر قليلاً ثم أعد المحاولة.';
+  if(s.indexOf('failed to fetch')>-1||s.indexOf('network')>-1) return 'تعذّر الاتصال بالخادم — تحقّق من الإنترنت.';
+  return raw||'تعذّر تسجيل الدخول';
+}
+
+function lgFail(msg){
+  var er=$('#lgErr'); er.textContent=msg;
+  er.classList.remove('on'); void er.offsetWidth; er.classList.add('on');
+}
+
 $('#lgForm').addEventListener('submit',function(e){
   e.preventDefault();
-  var u=$('#lgU').value.trim(), p=$('#lgP').value;
-  if(u===auth.u && p===auth.p){
-    try{sessionStorage.setItem(KEY_SESS,'1');}catch(err){}
-    setAdmin(true); closeOv($('#loginOv')); openPanel();
+  var email=$('#lgU').value.trim(), pass=$('#lgP').value;
+  var btn=$('#lgBtn');
+  if(!email||!pass) return lgFail('اكتب البريد الإلكتروني وكلمة المرور.');
+
+  btn.disabled=true; btn.textContent='جارٍ التحقق...';
+  fetch(SB.url+'/auth/v1/token?grant_type=password',{
+    method:'POST',
+    headers:{'apikey':SB.key,'Content-Type':'application/json'},
+    body:JSON.stringify({email:email,password:pass})
+  })
+  .then(function(r){ return r.json().then(function(j){
+      if(!r.ok) throw new Error(authMsg(j.error_description||j.msg||j.message||j.error||''));
+      return j;
+    });
+  })
+  .then(function(j){
+    SB.token=j.access_token;
+    // التحقق من الصلاحية على الخادم — ليس في المتصفح
+    return sbFetch('rpc/is_landing_admin',{method:'POST',body:{}}).then(function(ok){
+      if(ok!==true){ SB.token=null; throw new Error('هذا الحساب ليس له صلاحية إدارة الصفحة.'); }
+      try{ sessionStorage.setItem(KEY_SESS,j.access_token); }catch(err){}
+      return loadFromServer();
+    });
+  })
+  .then(function(){
+    setAdmin(true); closeOv($('#loginOv')); openPanel(); loadLeads();
     toast('أهلاً بك — تم تسجيل الدخول بنجاح');
-  }else{
-    var er=$('#lgErr'); er.textContent='اسم المستخدم أو كلمة المرور غير صحيحة.';
-    er.classList.remove('on'); void er.offsetWidth; er.classList.add('on');
-  }
+  })
+  .catch(function(err){ lgFail(authMsg(err.message)); })
+  .then(function(){ btn.disabled=false; btn.innerHTML='<svg class="ic"><use href="#i-in"/></svg> دخول'; });
 });
+
 function logout(){
+  var t=SB.token;
+  SB.token=null;
   try{sessionStorage.removeItem(KEY_SESS);}catch(e){}
-  setAdmin(false); closePanel(); toast('تم تسجيل الخروج','info');
+  if(t){ fetch(SB.url+'/auth/v1/logout',{method:'POST',
+    headers:{'apikey':SB.key,'Authorization':'Bearer '+t}}).catch(function(){}); }
+  setAdmin(false); closePanel();
+  loadFromServer().then(function(){ renderCards(); });
+  toast('تم تسجيل الخروج','info');
 }
 $('#pnOut').addEventListener('click',logout);
 
 /* ============================================================
    ADMIN PANEL
    ============================================================ */
-function openPanel(){ if(!isAdmin) return; $('#panel').classList.add('open'); document.body.classList.add('locked'); renderTable(); }
+function openPanel(){
+  if(!isAdmin) return;
+  $('#panel').classList.add('open'); document.body.classList.add('locked');
+  renderTable(); loadLeads();
+  $('#stConn').textContent = online?'متصل':'غير متصل';
+  $('#stConn').style.color = online?'#34D399':'#FB7185';
+  var em='—';
+  try{ em=JSON.parse(atob((SB.token||'..').split('.')[1]||'')).email||'—'; }catch(e){}
+  $('#stUser').textContent=em;
+}
 function closePanel(){ $('#panel').classList.remove('open'); document.body.classList.remove('locked'); }
 $('#panelBtn').addEventListener('click',openPanel);
 $('#pnView').addEventListener('click',closePanel);
@@ -1580,15 +1728,21 @@ $('#tbody').addEventListener('click',function(e){
   if(e.target.closest('.js-ed')) return openEditor(id);
   if(e.target.closest('.js-rm')) return askDelete(id);
   if(e.target.closest('.js-st')){
-    services[i].status = services[i].status==='active' ? 'draft' : 'active';
-    persist(); toast(services[i].status==='active'?'تم تفعيل الخدمة':'تم إخفاء الخدمة','info'); return;
+    if(!requireOnline()) return;
+    var next = services[i].status==='active' ? 'draft' : 'active';
+    services[i].status=next; persist();
+    sbFetch('landing_services?id=eq.'+encodeURIComponent(services[i].id),
+            {method:'PATCH',body:{status:next}})
+      .then(function(){ toast(next==='active'?'تم تفعيل الخدمة':'تم إخفاء الخدمة','info'); })
+      .catch(function(err){ toast('تعذّر تحديث الحالة','err'); console.error(err); });
+    return;
   }
   if(e.target.closest('.js-up')&&i>0){ move(i,i-1); return; }
   if(e.target.closest('.js-dn')&&i<services.length-1){ move(i,i+1); return; }
 });
 function move(from,to){
   var it=services.splice(from,1)[0];
-  services.splice(to,0,it); persist();
+  services.splice(to,0,it); persist(); pushOrder();
 }
 
 /* drag & drop reorder */
@@ -1616,7 +1770,17 @@ $('#tbody').addEventListener('dragend',function(){
   $$('#tbody tr').forEach(function(x){x.classList.remove('drag','over');});
 });
 
+/* حفظ محلي فوري (استجابة سريعة) — والخادم هو المرجع */
 function persist(){ DB.save(KEY_SVC,services); renderCards(); renderTable(); }
+
+/* إعادة مزامنة الترتيب بعد أي تحريك */
+function pushOrder(){
+  if(!requireOnline()) return;
+  Promise.all(services.map(function(s,i){
+    return sbFetch('landing_services?id=eq.'+encodeURIComponent(s.id),
+                   {method:'PATCH',body:{sort_order:i}});
+  })).catch(function(e){ toast('تعذّر حفظ الترتيب','err'); console.error(e); });
+}
 
 /* ============================================================
    EDITOR
@@ -1673,15 +1837,35 @@ $('#edForm').addEventListener('submit',function(e){
     features:$('#edFeat').value.split('\n').map(function(x){return x.trim();}).filter(Boolean),
     icon:pickIcon, color:pickColor, status:$('#edStatus').value
   };
-  if(editingId){
-    var i=services.findIndex(function(x){return x.id===editingId;});
-    services[i]=Object.assign({},services[i],data);
-    toast('تم تحديث الخدمة بنجاح');
+  if(!requireOnline()) return;
+  var btn=$('#edSave'); btn.disabled=true;
+
+  var req, wasEditing=!!editingId;
+  if(wasEditing){
+    req=sbFetch('landing_services?id=eq.'+encodeURIComponent(editingId),
+                {method:'PATCH',body:toRow(data),prefer:'return=representation'});
   }else{
-    data.id=uid(); services.push(data);
-    toast('تمت إضافة الخدمة بنجاح');
+    req=sbFetch('landing_services',
+                {method:'POST',body:toRow(data,services.length),prefer:'return=representation'});
   }
-  persist(); closeOv($('#edOv'));
+
+  req.then(function(rows){
+    var row=Array.isArray(rows)?rows[0]:rows;
+    if(wasEditing){
+      var i=services.findIndex(function(x){return x.id===editingId;});
+      if(i>-1) services[i]=row?fromRow(row):Object.assign({},services[i],data);
+    }else{
+      services.push(row?fromRow(row):Object.assign({id:uid()},data));
+    }
+    persist(); closeOv($('#edOv'));
+    toast(wasEditing?'تم تحديث الخدمة بنجاح':'تمت إضافة الخدمة بنجاح');
+  })
+  .catch(function(err){
+    console.error(err);
+    var er=$('#edErr'); er.textContent='تعذّر الحفظ في قاعدة البيانات. تأكد من صلاحيتك ثم أعد المحاولة.';
+    er.classList.remove('on'); void er.offsetWidth; er.classList.add('on');
+  })
+  .then(function(){ btn.disabled=false; });
 });
 
 $('#addBtn').addEventListener('click',function(){openEditor(null);});
@@ -1698,8 +1882,15 @@ function askDelete(id){
 }
 $('#cfYes').addEventListener('click',function(){
   if(!pendingDel) return;
-  services=services.filter(function(x){return x.id!==pendingDel;});
-  pendingDel=null; persist(); closeOv($('#cfOv')); toast('تم حذف الخدمة','info');
+  if(!requireOnline()) return;
+  var id=pendingDel; pendingDel=null;
+  sbFetch('landing_services?id=eq.'+encodeURIComponent(id),{method:'DELETE'})
+    .then(function(){
+      services=services.filter(function(x){return x.id!==id;});
+      persist(); closeOv($('#cfOv')); toast('تم حذف الخدمة','info');
+      pushOrder();
+    })
+    .catch(function(err){ console.error(err); closeOv($('#cfOv')); toast('تعذّر حذف الخدمة','err'); });
 });
 
 /* ============================================================
@@ -1721,48 +1912,76 @@ $('#impFile').addEventListener('change',function(e){
       var d=JSON.parse(r.result);
       var arr=Array.isArray(d)?d:d.services;
       if(!Array.isArray(arr)) throw 0;
-      services=arr.map(function(s){
-        return {id:s.id||uid(),title:String(s.title||'بدون اسم'),desc:String(s.desc||''),long:String(s.long||''),
+      if(!requireOnline()) return;
+      var clean=arr.map(function(s,i){
+        return {title:String(s.title||'بدون اسم'),description:String(s.desc||s.description||''),
+                long_description:String(s.long||s.long_description||''),
                 link:/^https?:\/\//i.test(s.link||'')?s.link:'',
-                features:Array.isArray(s.features)?s.features:[],icon:ICONS.indexOf(s.icon)>-1?s.icon:'i-box',
-                color:COLORS[s.color]?s.color:'violet',status:s.status==='draft'?'draft':'active'};
+                features:Array.isArray(s.features)?s.features:[],
+                icon:ICONS.indexOf(s.icon)>-1?s.icon:'i-box',
+                color:COLORS[s.color]?s.color:'violet',
+                status:s.status==='draft'?'draft':'active',
+                sort_order:services.length+i};
       });
-      if(d.config){ config=Object.assign({},DEFAULT_CFG,d.config); DB.save(KEY_CFG,config); applyConfig(); }
-      persist(); toast('تم استيراد '+services.length+' خدمة');
+      // إضافة وليس استبدال — لا نحذف ما هو موجود
+      sbFetch('landing_services',{method:'POST',body:clean,prefer:'return=representation'})
+        .then(function(){ return loadFromServer(); })
+        .then(function(){ renderCards(); renderTable(); toast('تمت إضافة '+clean.length+' خدمة'); })
+        .catch(function(err){ console.error(err); toast('تعذّر استيراد الخدمات','err'); });
     }catch(err){ toast('ملف غير صالح','err'); }
     e.target.value='';
   };
   r.readAsText(f);
 });
 $('#rstBtn').addEventListener('click',function(){
-  services=JSON.parse(JSON.stringify(DEFAULT_SVC)); persist(); toast('تمت استعادة الخدمات الافتراضية','info');
+  loadFromServer().then(function(ok){
+    renderCards(); renderTable();
+    toast(ok?'تمت إعادة التحميل من قاعدة البيانات':'تعذّر الاتصال بقاعدة البيانات',ok?'ok':'err');
+  });
 });
-$('#wipeBtn').addEventListener('click',function(){
-  DB.del(KEY_SVC); DB.del(KEY_CFG); DB.del(KEY_AUTH);
-  services=JSON.parse(JSON.stringify(DEFAULT_SVC));
-  config=JSON.parse(JSON.stringify(DEFAULT_CFG));
-  auth=JSON.parse(JSON.stringify(DEFAULT_AUTH));
-  applyConfig(); persist(); $('#stU').value=auth.u;
-  toast('تم مسح كل البيانات المحفوظة','info');
-});
+$('#expBtn2').addEventListener('click',function(){ $('#expBtn').click(); });
 
 /* ============================================================
-   SETTINGS
+   LEADS — طلبات نموذج التواصل
    ============================================================ */
-$('#stU').value=auth.u;
-$('#stForm').addEventListener('submit',function(e){
-  e.preventDefault();
-  var er=$('#stErr'), u=$('#stU').value.trim(), p=$('#stP').value, p2=$('#stP2').value;
-  function fail(m){ er.textContent=m; er.classList.remove('on'); void er.offsetWidth; er.classList.add('on'); }
-  if(!u) return fail('اسم المستخدم مطلوب.');
-  if(p||p2){
-    if(p.length<6) return fail('كلمة المرور يجب أن تكون 6 أحرف على الأقل.');
-    if(p!==p2)     return fail('كلمتا المرور غير متطابقتين.');
-    auth.p=p;
-  }
-  auth.u=u; DB.save(KEY_AUTH,auth);
-  er.classList.remove('on'); $('#stP').value=''; $('#stP2').value='';
-  toast('تم تحديث بيانات الدخول');
+function fmtDate(s){
+  try{ return new Date(s).toLocaleString('ar-EG',{dateStyle:'short',timeStyle:'short'}); }
+  catch(e){ return String(s||'').slice(0,16); }
+}
+function loadLeads(){
+  if(!isAdmin||!online) return;
+  sbFetch('landing_leads?select=*&order=created_at.desc&limit=200')
+    .then(function(rows){
+      rows=rows||[];
+      $('#leadsEmpty').style.display=rows.length?'none':'block';
+      var fresh=rows.filter(function(r){return r.status==='new';}).length;
+      var dot=$('#leadsDot');
+      dot.style.display=fresh?'inline-block':'none'; dot.textContent=fresh;
+      $('#leadsBody').innerHTML=rows.map(function(r){
+        return '<tr data-id="'+esc(r.id)+'">'+
+          '<td style="font-weight:800;white-space:nowrap">'+esc(r.name)+'</td>'+
+          '<td dir="ltr">'+esc(r.phone)+'</td>'+
+          '<td dir="ltr"><a href="mailto:'+esc(r.email)+'" style="color:#A78BFA">'+esc(r.email)+'</a></td>'+
+          '<td>'+(esc(r.service)||'—')+'</td>'+
+          '<td><div class="t-desc">'+(esc(r.message)||'—')+'</div></td>'+
+          '<td style="color:var(--muted);font-size:12.5px;white-space:nowrap">'+esc(fmtDate(r.created_at))+'</td>'+
+          '<td><button class="badge '+(r.status==='new'?'badge-ok':'badge-off')+' js-lead">'+
+              (r.status==='new'?'جديد':(r.status==='contacted'?'تم التواصل':'مغلق'))+'</button></td>'+
+        '</tr>';
+      }).join('');
+    })
+    .catch(function(e){ console.error(e); toast('تعذّر تحميل الطلبات','err'); });
+}
+$('#leadsRefresh').addEventListener('click',loadLeads);
+$('#leadsBody').addEventListener('click',function(e){
+  var b=e.target.closest('.js-lead'); if(!b) return;
+  var id=e.target.closest('tr').dataset.id;
+  var order={'new':'contacted','contacted':'closed','closed':'new'};
+  var cur=b.textContent.trim()==='جديد'?'new':(b.textContent.trim()==='تم التواصل'?'contacted':'closed');
+  var next=order[cur];
+  sbFetch('landing_leads?id=eq.'+encodeURIComponent(id),{method:'PATCH',body:{status:next}})
+    .then(loadLeads)
+    .catch(function(){ toast('تعذّر تحديث حالة الطلب','err'); });
 });
 
 /* ============================================================
@@ -1911,14 +2130,31 @@ $$('[data-plan]').forEach(function(b){
   });
 });
 
-/* contact form */
+/* contact form → Edge Function → يُخزَّن + يُرسل بريداً لـ support@mad3oom.online */
 $('#ctForm').addEventListener('submit',function(e){
   e.preventDefault();
+  var form=this;
   var n=$('#cn').value.trim(), p=$('#cp').value.trim(), m=$('#ce').value.trim();
   if(!n||!p||!m) return toast('الرجاء تعبئة الحقول المطلوبة','err');
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(m)) return toast('البريد الإلكتروني غير صحيح','err');
-  toast('تم استلام طلبك يا '+n.split(' ')[0]+' — سنتواصل معك قريباً');
-  this.reset();
+
+  var btn=$('#ctBtn'); btn.disabled=true; btn.textContent='جارٍ الإرسال...';
+  fetch(SB.url+'/functions/v1/landing-contact',{
+    method:'POST',
+    headers:{'apikey':SB.key,'Content-Type':'application/json'},
+    body:JSON.stringify({
+      name:n, phone:p, email:m,
+      service:$('#cs').value, message:$('#cm').value.trim(),
+      website:$('#cw').value            // مصيدة السبام
+    })
+  })
+  .then(function(r){ return r.json().then(function(j){ if(!r.ok) throw new Error(j.error||'تعذّر الإرسال'); return j; }); })
+  .then(function(){
+    toast('تم استلام طلبك يا '+n.split(' ')[0]+' — سنتواصل معك قريباً');
+    form.reset();
+  })
+  .catch(function(err){ toast(err.message||'تعذّر إرسال الطلب، حاول مرة أخرى','err'); })
+  .then(function(){ btn.disabled=false; btn.innerHTML='إرسال الطلب <svg class="ic"><use href="#i-arrow"/></svg>'; });
 });
 
 /* faq: one open at a time */
@@ -1941,10 +2177,27 @@ setTimeout(hidePre,2600);
 function safe(name,fn){ try{ fn(); }catch(e){ if(window.console) console.error('[مدعوم] فشل في: '+name,e); } }
 
 safe('applyConfig',applyConfig);
-safe('renderCards',function(){
-  var on=false;
-  try{ on=sessionStorage.getItem(KEY_SESS)==='1'; }catch(e){}
-  if(on) setAdmin(true); else renderCards();
+safe('renderCards',renderCards);
+
+/* استعادة الجلسة ثم التحميل من قاعدة البيانات */
+safe('boot-supabase',function(){
+  try{ SB.token=sessionStorage.getItem(KEY_SESS)||null; }catch(e){ SB.token=null; }
+
+  var start=SB.token
+    ? sbFetch('rpc/is_landing_admin',{method:'POST',body:{}})
+        .then(function(ok){ if(ok!==true){ SB.token=null; try{sessionStorage.removeItem(KEY_SESS);}catch(e){} } return ok===true; })
+        .catch(function(){ SB.token=null; try{sessionStorage.removeItem(KEY_SESS);}catch(e){} return false; })
+    : Promise.resolve(false);
+
+  start.then(function(admin){
+    return loadFromServer().then(function(){
+      applyConfig();
+      if(admin) setAdmin(true); else renderCards();
+      $('#stConn').textContent = online?'متصل':'غير متصل';
+      $('#stConn').style.color = online?'#34D399':'#FB7185';
+      if(admin) loadLeads();
+    });
+  });
 });
 safe('observeReveal',observeReveal);
 safe('revealVisible',revealVisible);
