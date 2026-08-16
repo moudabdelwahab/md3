@@ -3,99 +3,418 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medical Terminology Interactive Question Bank (300 MCQs)</title>
-    <!-- Tailwind CSS -->
+    <title>Medical Terminology Bank (300 MCQs)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
-    </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+<body class="bg-slate-50 text-slate-800 p-4 font-sans">
+    <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200">
+        <!-- Header -->
+        <div class="bg-indigo-600 text-white p-5 flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-bold"><i class="fa-solid fa-notes-medical mr-2"></i>MedTerm Mastery</h1>
+                <p class="text-xs text-indigo-200">300 Fundamental Review MCQs</p>
+            </div>
+            <div class="space-x-2">
+                <select id="cat-filter" onchange="loadCategory()" class="bg-indigo-700 border-none text-sm text-white rounded-lg p-2 focus:ring-0">
+                    <option value="-1">All Topics</option>
+                    <option value="0">General & Roots</option>
+                    <option value="1">Hematology</option>
+                    <option value="2">Oncology</option>
+                    <option value="3">Endocrine</option>
+                    <option value="4">Cardiovascular</option>
+                    <option value="5">Nervous</option>
+                    <option value="6">Gastrointestinal</option>
+                    <option value="7">Urinary</option>
+                    <option value="8">Musculoskeletal</option>
+                </select>
+            </div>
+        </div>
 
-    <!-- Header Navigation -->
-    <header class="bg-slate-900 text-white shadow-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <div class="bg-indigo-600 p-2 rounded-lg text-white">
-                    <i class="fa-solid me-0 fa-notes-medical text-2xl"></i>
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold tracking-tight">MedTerm Mastery</h1>
-                    <p class="text-xs text-indigo-300">300 Fundamental Review MCQs</p>
-                </div>
+        <!-- Quiz Area -->
+        <div class="p-6 sm:p-8 space-y-6">
+            <div class="flex justify-between items-center border-b pb-4">
+                <span id="q-counter" class="text-xs font-bold bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full">Question 1 / 300</span>
+                <span id="q-cat-label" class="text-xs font-bold text-slate-400 uppercase tracking-wider">Category</span>
             </div>
             
-            <!-- Navigation Tabs -->
-            <nav class="flex space-x-1 sm:space-x-2 bg-slate-800 p-1 rounded-xl">
-                <button id="nav-practice" onclick="switchTab('practice')" class="px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors bg-indigo-600 text-white shadow">
-                    <i class="fa-solid fa-graduation-cap mr-1 sm:mr-2"></i>Practice
-                </button>
-                <button id="nav-exam" onclick="switchTab('exam')" class="px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium text-slate-300 hover:text-white transition-colors">
-                    <i class="fa-solid fa-stopwatch mr-1 sm:mr-2"></i>Exam Mode
-                </button>
-                <button id="nav-browse" onclick="switchTab('browse')" class="px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium text-slate-300 hover:text-white transition-colors">
-                    <i class="fa-solid fa-book-open mr-1 sm:mr-2"></i>Browse All
-                </button>
-            </nav>
+            <h2 id="q-text" class="text-xl font-bold text-slate-900 leading-snug">Question Text?</h2>
+            
+            <div id="options-container" class="grid grid-cols-1 gap-3"></div>
+            
+            <div id="explanation-box" class="hidden bg-slate-50 border-l-4 border-indigo-500 p-4 rounded-r-lg text-sm text-slate-700"></div>
+            
+            <div class="flex justify-between pt-4 border-t">
+                <button onclick="prevQ()" class="px-5 py-2 rounded-lg border text-slate-600 hover:bg-slate-50 font-semibold text-sm transition"><i class="fa-solid fa-arrow-left mr-2"></i>Prev</button>
+                <button onclick="nextQ()" class="px-5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm transition shadow">Next<i class="fa-solid fa-arrow-right ml-2"></i></button>
+            </div>
         </div>
-    </header>
+    </div>
 
-    <!-- Main Container -->
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+<script>
+const cats = ["General & Roots", "Hematology", "Oncology", "Endocrine", "Cardiovascular", "Nervous", "Gastrointestinal", "Urinary", "Musculoskeletal"];
+const rawData = [
+[1,0,"'hem/o' means:",["Blood","Liver","Heart","Bone"],0,"hem/o = blood."],
+[2,0,"'leuk/o' means:",["White","Red","Black","Blue"],0,"leuk/o = white."],
+[3,0,"'erythr/o' means:",["Red","White","Blue","Yellow"],0,"erythr/o = red."],
+[4,0,"'thromb/o' means:",["Clot","Cell","Vein","Artery"],0,"thromb/o = clot."],
+[5,0,"Suffix '-emia' means:",["Blood condition","Pain","Inflammation","Tumor"],0,"-emia = blood condition."],
+[6,0,"Suffix '-cyte' means:",["Cell","Tissue","Organ","Fluid"],0,"-cyte = cell."],
+[7,0,"'-penia' means:",["Deficiency","Increase","Disease","Swelling"],0,"-penia = deficiency."],
+[8,0,"'-osis' means:",["Abnormal condition","Removal","Infection","Incision"],0,"-osis = abnormal condition."],
+[9,0,"'-oma' means:",["Tumor","Hole","Pain","Stone"],0,"-oma = tumor."],
+[10,0,"'-pathy' means:",["Disease","Study of","Fear","Love"],0,"-pathy = disease."],
+[11,0,"'-lysis' means:",["Destruction","Formation","Stopping","Measuring"],0,"-lysis = breakdown."],
+[12,0,"'-poiesis' means:",["Formation","Destruction","Discharge","Flow"],0,"-poiesis = formation."],
+[13,0,"'hyper-' means:",["Excessive/High","Low","Normal","Slow"],0,"hyper- = high/excessive."],
+[14,0,"'hypo-' means:",["Low/Deficient","High","Fast","Many"],0,"hypo- = low."],
+[15,0,"'eu-' means:",["Normal/Good","Bad","Without","Against"],0,"eu- = normal."],
+[16,0,"'poly-' means:",["Many/Excessive","Few","One","Half"],0,"poly- = many."],
+[17,0,"'a-' or 'an-' means:",["Without","With","Inside","Outside"],0,"a-/an- = without."],
+[18,0,"'brady-' means:",["Slow","Fast","Large","Small"],0,"brady- = slow."],
+[19,0,"'tachy-' means:",["Fast","Slow","Around","Through"],0,"tachy- = fast."],
+[20,0,"'gastr/o' means:",["Stomach","Liver","Colon","Brain"],0,"gastr/o = stomach."],
+[21,0,"'hepat/o' means:",["Liver","Kidney","Spleen","Heart"],0,"hepat/o = liver."],
+[22,0,"'nephr/o' means:",["Kidney","Nerve","Lung","Eye"],0,"nephr/o = kidney."],
+[23,0,"'cardi/o' means:",["Heart","Vessel","Blood","Muscle"],0,"cardi/o = heart."],
+[24,0,"'oste/o' means:",["Bone","Joint","Cartilage","Tendon"],0,"oste/o = bone."],
+[25,0,"'my/o' means:",["Muscle","Marrow","Spine","Skin"],0,"my/o = muscle."],
+[26,0,"'arthr/o' means:",["Joint","Artery","Vein","Bone"],0,"arthr/o = joint."],
+[27,0,"'-itis' means:",["Inflammation","Infection","Pain","Removal"],0,"-itis = inflammation."],
+[28,0,"'-ectomy' means:",["Surgical removal","Incision","Repair","Opening"],0,"-ectomy = removal."],
+[29,0,"'-otomy' means:",["Incision into","Removal","Crushing","Viewing"],0,"-otomy = incision."],
+[30,0,"'-stomy' means:",["Creation of opening","Suture","Removal","Pain"],0,"-stomy = opening."],
+[31,1,"Function of RBCs:",["Carry oxygen","Fight infection","Clot blood","Digest food"],0,"RBCs carry oxygen."],
+[32,1,"Function of WBCs:",["Fight infection","Carry oxygen","Stop bleeding","Carry water"],0,"WBCs fight infection."],
+[33,1,"Platelets function:",["Blood clotting","Immunity","Oxygen transport","Waste removal"],0,"Platelets clot blood."],
+[34,1,"Liquid part of blood:",["Plasma","Serum","Lymph","Hemoglobin"],0,"Plasma is the fluid portion."],
+[35,1,"Blood cell formation is:",["Hematopoiesis","Hemolysis","Hemostasis","Hematuria"],0,"Hematopoiesis = cell formation."],
+[36,1,"Oxygen-carrying protein:",["Hemoglobin","Fibrin","Myosin","Insulin"],0,"Hemoglobin carries O2."],
+[37,1,"Percentage of RBCs is:",["Hematocrit","Hemoglobin","Platelet count","WBC count"],0,"Hct = % of RBCs."],
+[38,1,"Destruction of RBCs:",["Hemolysis","Hemostasis","Hematopoiesis","Hematuria"],0,"Hemolysis = RBC destruction."],
+[39,1,"WBC fighting bacteria:",["Neutrophils","Eosinophils","Basophils","Lymphocytes"],0,"Neutrophils fight bacteria."],
+[40,1,"WBC providing immunity:",["Lymphocytes","Monocytes","Basophils","Eosinophils"],0,"Lymphocytes = immunity."],
+[41,1,"WBC removing debris:",["Monocytes","Neutrophils","Basophils","Platelets"],0,"Monocytes phagocytose debris."],
+[42,1,"WBC for allergies/parasites:",["Eosinophils","Lymphocytes","Neutrophils","Monocytes"],0,"Eosinophils = allergies/parasites."],
+[43,1,"WBC releasing histamine:",["Basophils","Eosinophils","Neutrophils","Lymphocytes"],0,"Basophils release histamine."],
+[44,1,"Pale skin is called:",["Pallor","Cyanosis","Jaundice","Erythema"],0,"Pallor = pale skin."],
+[45,1,"Bluish discoloration:",["Cyanosis","Jaundice","Pallor","Petechiae"],0,"Cyanosis = bluish skin."],
+[46,1,"Tiny bleeding spots:",["Petechiae","Ecchymosis","Hematoma","Hemangioma"],0,"Petechiae = tiny spots."],
+[47,1,"Bruising is called:",["Ecchymosis","Petechiae","Jaundice","Pallor"],0,"Ecchymosis = bruising."],
+[48,1,"Yellow discoloration:",["Jaundice","Cyanosis","Pallor","Ecchymosis"],0,"Jaundice = yellow skin."],
+[49,1,"Stopping bleeding is:",["Hemostasis","Hemolysis","Hematopoiesis","Homeostasis"],0,"Hemostasis = stopping bleeding."],
+[50,1,"Blood administration:",["Transfusion","Phlebotomy","Dialysis","Biopsy"],0,"Transfusion = giving blood."],
+[51,1,"Blood removal from vein:",["Phlebotomy","Transfusion","Venography","Angioplasty"],0,"Phlebotomy = drawing blood."],
+[52,1,"CBC stands for:",["Complete blood count","Cell blood count","Coagulation blood check","Central blood core"],0,"CBC = Complete Blood Count."],
+[53,1,"Decrease in RBCs/Hb:",["Anemia","Leukemia","Polycythemia","Thrombosis"],0,"Anemia = low RBC/Hb."],
+[54,1,"Blood tissue cancer:",["Leukemia","Lymphoma","Anemia","Melanoma"],0,"Leukemia = blood cancer."],
+[55,1,"Lymphatic tissue cancer:",["Lymphoma","Leukemia","Myeloma","Sarcoma"],0,"Lymphoma = lymph cancer."],
+[56,1,"Inherited bleeding disorder:",["Hemophilia","Sickle cell","Anemia","Polycythemia"],0,"Hemophilia = bleeding disorder."],
+[57,1,"Low platelet count:",["Thrombocytopenia","Leukopenia","Anemia","Pancytopenia"],0,"Thrombocytopenia = low platelets."],
+[58,1,"Abnormal Hb disorder:",["Sickle cell disease","Hemophilia","Leukemia","Thrombosis"],0,"Sickle cell = abnormal Hb."],
+[59,1,"Increased RBC count:",["Polycythemia","Anemia","Leukopenia","Pancytopenia"],0,"Polycythemia = excess RBCs."],
+[60,1,"Decrease in all blood cells:",["Pancytopenia","Polycythemia","Leukemia","Hemophilia"],0,"Pancytopenia = all cells low."],
+[61,1,"Low WBC count:",["Leukopenia","Leukocytosis","Anemia","Thrombocytopenia"],0,"Leukopenia = low WBCs."],
+[62,1,"High WBC count:",["Leukocytosis","Leukopenia","Polycythemia","Pancytopenia"],0,"Leukocytosis = high WBCs."],
+[63,1,"Enlarged lymph nodes:",["Lymphadenopathy","Splenomegaly","Hepatomegaly","Cardiomegaly"],0,"Lymphadenopathy = enlarged nodes."],
+[64,1,"Enlarged spleen:",["Splenomegaly","Hepatomegaly","Cardiomegaly","Nephromegaly"],0,"Splenomegaly = enlarged spleen."],
+[65,1,"PT stands for:",["Prothrombin time","Partial time","Platelet time","Plasma time"],0,"PT = Prothrombin time."],
+[66,2,"Branch studying cancer:",["Oncology","Hematology","Cardiology","Neurology"],0,"Oncology = study of cancer."],
+[67,2,"Uncontrolled cell growth:",["Cancer","Necrosis","Apoptosis","Ischemia"],0,"Cancer = uncontrolled growth."],
+[68,2,"New abnormal growth:",["Neoplasm","Hematoma","Abscess","Ulcer"],0,"Neoplasm = new growth."],
+[69,2,"Mass of abnormal tissue:",["Tumor","Cyst","Polyp","Node"],0,"Tumor = tissue mass."],
+[70,2,"Noncancerous tumor:",["Benign","Malignant","Metastatic","Invasive"],0,"Benign = noncancerous."],
+[71,2,"Cancerous tumor:",["Malignant","Benign","Localized","Dormant"],0,"Malignant = cancerous."],
+[72,2,"Spread of cancer:",["Metastasis","Remission","Recurrence","In situ"],0,"Metastasis = cancer spreading."],
+[73,2,"Prefix 'meta-' means:",["Change/spread","New","Abnormal","Excessive"],0,"meta- = change/spread."],
+[74,2,"Prefix 'neo-' means:",["New","Old","Fast","Slow"],0,"neo- = new."],
+[75,2,"Suffix '-carcinoma' means:",["Cancerous tumor","Benign tumor","Fluid sac","Stone"],0,"-carcinoma = cancerous tumor."],
+[76,2,"Suffix '-sarcoma' means:",["Connective tissue cancer","Epithelial cancer","Blood cancer","Brain cancer"],0,"-sarcoma = connective tissue cancer."],
+[77,2,"Suffix '-plasia' means:",["Formation/growth","Destruction","Swelling","Pain"],0,"-plasia = formation/growth."],
+[78,2,"Root 'onc/o' means:",["Tumor","Cancer","Cell","Gland"],0,"onc/o = tumor."],
+[79,2,"Root 'carcin/o' means:",["Cancer","Tumor","Flesh","Gland"],0,"carcin/o = cancer."],
+[80,2,"Cancer of epithelial tissue:",["Carcinoma","Sarcoma","Leukemia","Lymphoma"],0,"Carcinoma = epithelial cancer."],
+[81,2,"Cancer of pigment cells:",["Melanoma","Myeloma","Lymphoma","Sarcoma"],0,"Melanoma = pigment cell cancer."],
+[82,2,"Cancer of plasma cells:",["Myeloma","Melanoma","Leukemia","Carcinoma"],0,"Myeloma = plasma cell cancer."],
+[83,2,"Localized cancer (not spread):",["In situ","Metastatic","Systemic","Malignant"],0,"In situ = localized."],
+[84,2,"Disappearance of symptoms:",["Remission","Recurrence","Prognosis","Metastasis"],0,"Remission = symptoms disappear."],
+[85,2,"Return of disease:",["Recurrence","Remission","Prognosis","In situ"],0,"Recurrence = disease returns."],
+[86,2,"Predicted outcome:",["Prognosis","Diagnosis","Biopsy","Remission"],0,"Prognosis = predicted outcome."],
+[87,2,"End-stage disease:",["Terminal","Benign","In situ","Remission"],0,"Terminal = end-stage."],
+[88,2,"TNM staging 'T' means:",["Tumor size","Time","Tissue","Treatment"],0,"T = Tumor size."],
+[89,2,"TNM staging 'N' means:",["Node involvement","Necrosis","Neoplasm","Nerve"],0,"N = Lymph node involvement."],
+[90,2,"TNM staging 'M' means:",["Metastasis","Malignant","Mass","Muscle"],0,"M = Metastasis."],
+[91,3,"Master endocrine gland:",["Pituitary","Thyroid","Adrenal","Pancreas"],0,"Pituitary = master gland."],
+[92,3,"Gland controlling metabolism:",["Thyroid","Pineal","Thymus","Parathyroid"],0,"Thyroid controls metabolism."],
+[93,3,"Glands regulating calcium:",["Parathyroid","Adrenal","Thyroid","Pancreas"],0,"Parathyroid regulates calcium."],
+[94,3,"Glands for stress response:",["Adrenal","Pineal","Pituitary","Ovaries"],0,"Adrenal glands handle stress."],
+[95,3,"Organ regulating blood sugar:",["Pancreas","Liver","Kidney","Spleen"],0,"Pancreas regulates glucose."],
+[96,3,"Gland for sleep cycle:",["Pineal","Thyroid","Adrenal","Pituitary"],0,"Pineal secretes melatonin."],
+[97,3,"'Endo-' means:",["Within","Outside","Around","Through"],0,"Endo- = within."],
+[98,3,"'-crine' means:",["Secrete","Absorb","Destroy","Create"],0,"-crine = secrete."],
+[99,3,"Anterior pituitary is:",["Adenohypophysis","Neurohypophysis","Hypothalamus","Thalamus"],0,"Adenohypophysis = anterior."],
+[100,3,"Posterior pituitary is:",["Neurohypophysis","Adenohypophysis","Pineal","Thymus"],0,"Neurohypophysis = posterior."],
+[101,3,"Excess GH in adults:",["Acromegaly","Gigantism","Dwarfism","Myxedema"],0,"Acromegaly = adult GH excess."],
+[102,3,"Excess GH in children:",["Gigantism","Acromegaly","Dwarfism","Cretinism"],0,"Gigantism = childhood GH excess."],
+[103,3,"Deficiency of GH:",["Dwarfism","Gigantism","Acromegaly","Goiter"],0,"Dwarfism = GH deficiency."],
+[104,3,"Removal of thyroid:",["Thyroidectomy","Thyroidotomy","Thyrostomy","Thyroplasty"],0,"Thyroidectomy = removal."],
+[105,3,"Enlarged thyroid gland:",["Goiter","Adenoma","Polyp","Cyst"],0,"Goiter = enlarged thyroid."],
+[106,3,"Excess thyroid hormone:",["Hyperthyroidism","Hypothyroidism","Thyrotoxicosis","Myxedema"],0,"Hyperthyroidism = excess."],
+[107,3,"Deficient thyroid hormone:",["Hypothyroidism","Hyperthyroidism","Thyrotoxicosis","Graves disease"],0,"Hypothyroidism = deficient."],
+[108,3,"Toxic excess of thyroid:",["Thyrotoxicosis","Myxedema","Goiter","Cretinism"],0,"Thyrotoxicosis = toxic excess."],
+[109,3,"Autoimmune hyperthyroidism:",["Graves disease","Addison disease","Cushing syndrome","Diabetes"],0,"Graves = autoimmune hyperthyroidism."],
+[110,3,"Severe hypothyroidism:",["Myxedema","Thyrotoxicosis","Acromegaly","Gigantism"],0,"Myxedema = severe hypothyroidism."],
+[111,3,"High blood calcium:",["Hypercalcemia","Hypocalcemia","Hyperglycemia","Hyperkalemia"],0,"Hypercalcemia = high calcium."],
+[112,3,"Low blood calcium:",["Hypocalcemia","Hypercalcemia","Hypoglycemia","Hyponatremia"],0,"Hypocalcemia = low calcium."],
+[113,3,"Hormone lowering blood sugar:",["Insulin","Glucagon","Cortisol","Epinephrine"],0,"Insulin lowers sugar."],
+[114,3,"Hormone raising blood sugar:",["Glucagon","Insulin","Melatonin","Calcitonin"],0,"Glucagon raises sugar."],
+[115,3,"Disorder of glucose metabolism:",["Diabetes mellitus","Diabetes insipidus","Addison disease","Cushing syndrome"],0,"Diabetes mellitus affects glucose."],
+[116,3,"High blood sugar:",["Hyperglycemia","Hypoglycemia","Euglycemia","Glycosuria"],0,"Hyperglycemia = high sugar."],
+[117,3,"Low blood sugar:",["Hypoglycemia","Hyperglycemia","Euglycemia","Polyuria"],0,"Hypoglycemia = low sugar."],
+[118,3,"Sugar in urine:",["Glycosuria","Hematuria","Proteinuria","Anuria"],0,"Glycosuria = sugar in urine."],
+[119,3,"Lack of insulin production:",["Type 1 DM","Type 2 DM","Gestational DM","Insipidus"],0,"Type 1 = lack of insulin."],
+[120,3,"Insulin resistance:",["Type 2 DM","Type 1 DM","Gestational DM","Addison disease"],0,"Type 2 = insulin resistance."],
+[121,3,"Diabetes during pregnancy:",["Gestational diabetes","Type 1 DM","Type 2 DM","Pre-diabetes"],0,"Gestational = during pregnancy."],
+[122,3,"Stress hormone from adrenal:",["Cortisol","Insulin","Thyroxine","Glucagon"],0,"Cortisol is a stress hormone."],
+[123,3,"Excess cortisol causes:",["Cushing syndrome","Addison disease","Graves disease","Myxedema"],0,"Cushing = excess cortisol."],
+[124,3,"Adrenal insufficiency:",["Addison disease","Cushing syndrome","Graves disease","Gigantism"],0,"Addison = adrenal insufficiency."],
+[125,3,"Removal of adrenal gland:",["Adrenalectomy","Thyroidectomy","Pancreatectomy","Pinealectomy"],0,"Adrenalectomy = removal."],
+[126,4,"'Cardi/o' means:",["Heart","Blood","Vein","Artery"],0,"Cardi/o = heart."],
+[127,4,"Muscular layer of heart:",["Myocardium","Endocardium","Pericardium","Epicardium"],0,"Myocardium = muscle."],
+[128,4,"Inner lining of heart:",["Endocardium","Myocardium","Pericardium","Exocardium"],0,"Endocardium = inner lining."],
+[129,4,"Sac around the heart:",["Pericardium","Endocardium","Myocardium","Pleura"],0,"Pericardium = sac."],
+[130,4,"Vessels carrying blood away:",["Arteries","Veins","Capillaries","Venules"],0,"Arteries = away from heart."],
+[131,4,"Vessels carrying blood back:",["Veins","Arteries","Aorta","Arterioles"],0,"Veins = back to heart."],
+[132,4,"Heart rate >100 bpm:",["Tachycardia","Bradycardia","Arrhythmia","Asystole"],0,"Tachycardia = fast."],
+[133,4,"Heart rate <60 bpm:",["Bradycardia","Tachycardia","Fibrillation","Flutter"],0,"Bradycardia = slow."],
+[134,4,"Chest pain from ischemia:",["Angina Pectoris","Infarction","Aneurysm","Endocarditis"],0,"Angina = chest pain."],
+[135,4,"Death of heart muscle:",["Myocardial Infarction","Angina","Heart Failure","Arrhythmia"],0,"MI = heart attack."],
+[136,4,"Heart cannot pump enough:",["Cardiac Failure","Infarction","Angina","Aneurysm"],0,"Heart failure = poor pumping."],
+[137,4,"Blockage of coronary arteries:",["Coronary Artery Disease","Endocarditis","Pericarditis","Myocarditis"],0,"CAD = blockage of arteries."],
+[138,4,"Plaque build-up in arteries:",["Atherosclerosis","Arteriosclerosis","Phlebitis","Thrombosis"],0,"Atherosclerosis = plaque."],
+[139,4,"Disease of heart muscle size/shape:",["Cardiomyopathy","Endocarditis","Pericarditis","Infarction"],0,"Cardiomyopathy = muscle disease."],
+[140,4,"Infection of inner heart lining:",["Endocarditis","Pericarditis","Myocarditis","Phlebitis"],0,"Endocarditis = inner infection."],
+[141,4,"Inflammation of heart sac:",["Pericarditis","Endocarditis","Myocarditis","Arteritis"],0,"Pericarditis = sac inflammation."],
+[142,4,"Dysfunction of heart valves:",["Valvular Heart Disease","Cardiomyopathy","Infarction","Angina"],0,"Valvular disease = valve dysfunction."],
+[143,4,"Dilated twisted veins:",["Varicose Veins","Aneurysm","Thrombus","Embolus"],0,"Varicose veins = dilated veins."],
+[144,4,"Episodic vasospasm in fingers:",["Raynaud's Disease","Buerger's Disease","Varicose Veins","Phlebitis"],0,"Raynaud's = cold vasospasm."],
+[145,4,"Vessel inflammation from smoking:",["Buerger's Disease","Raynaud's Disease","Atherosclerosis","Aneurysm"],0,"Buerger's is linked to smoking."],
+[146,4,"Difficulty breathing:",["Dyspnea","Apnea","Eupnea","Orthopnea"],0,"Dyspnea = difficult breathing."],
+[147,4,"Feeling rapid/irregular beat:",["Palpitations","Angina","Syncope","Vertigo"],0,"Palpitations = feeling heartbeat."],
+[148,4,"Swelling due to fluid:",["Edema","Ascites","Effusion","Hematoma"],0,"Edema = fluid accumulation."],
+[149,4,"Recording of heart's electricity:",["Electrocardiogram","Echocardiogram","Angiogram","Holter"],0,"ECG = electrical record."],
+[150,4,"Ultrasound of heart:",["Echocardiogram","Electrocardiogram","Angiogram","Radiograph"],0,"Echo = ultrasound."],
+[151,4,"Invasive exam of coronary arteries:",["Cardiac Catheterization","Echocardiogram","ECG","Stress test"],0,"Catheterization = invasive exam."],
+[152,4,"Stationary blood clot:",["Thrombus","Embolus","Plaque","Aneurysm"],0,"Thrombus = stationary clot."],
+[153,4,"Traveling blood clot:",["Embolus","Thrombus","Plaque","Atheroma"],0,"Embolus = traveling clot."],
+[154,4,"Ballooning of artery wall:",["Aneurysm","Varicose vein","Thrombus","Embolus"],0,"Aneurysm = ballooning."],
+[155,4,"High blood pressure:",["Hypertension","Hypotension","Ischemia","Infarction"],0,"Hypertension = high BP."],
+[156,4,"Low blood pressure:",["Hypotension","Hypertension","Ischemia","Infarction"],0,"Hypotension = low BP."],
+[157,4,"Lack of blood supply:",["Ischemia","Infarction","Necrosis","Apoptosis"],0,"Ischemia = lack of blood supply."],
+[158,4,"Surgical vessel repair:",["Angioplasty","Angiectomy","Angiography","Angiotomy"],0,"Angioplasty = vessel repair."],
+[159,4,"Mesh tube to keep vessel open:",["Stent","Pacemaker","Valve","Catheter"],0,"Stent = keeps vessel open."],
+[160,4,"Upper heart chambers:",["Atria","Ventricles","Septa","Valves"],0,"Atria = upper chambers."],
+[161,4,"Lower heart chambers:",["Ventricles","Atria","Septa","Valves"],0,"Ventricles = lower chambers."],
+[162,4,"Largest artery:",["Aorta","Vena cava","Pulmonary","Carotid"],0,"Aorta = largest artery."],
+[163,4,"Largest vein:",["Vena Cava","Aorta","Jugular","Femoral"],0,"Vena cava = largest vein."],
+[164,4,"Microscopic vessels:",["Capillaries","Arterioles","Venules","Arteries"],0,"Capillaries = exchange vessels."],
+[165,4,"Heart contraction phase:",["Systole","Diastole","Pause","Rest"],0,"Systole = contraction."],
+[166,5,"CNS consists of:",["Brain and spinal cord","Nerves only","Brain only","Spinal cord only"],0,"CNS = brain + spinal cord."],
+[167,5,"PNS consists of:",["Cranial and spinal nerves","Brain","Spinal cord","Meninges"],0,"PNS = nerves outside CNS."],
+[168,5,"ANS controls:",["Involuntary functions","Voluntary movement","Thought","Memory"],0,"ANS = involuntary."],
+[169,5,"Largest part of brain:",["Cerebrum","Cerebellum","Brainstem","Cortex"],0,"Cerebrum = largest part."],
+[170,5,"Brain part for coordination:",["Cerebellum","Cerebrum","Brainstem","Medulla"],0,"Cerebellum = coordination."],
+[171,5,"Brainstem controls:",["Vital functions","Memory","Vision","Hearing"],0,"Brainstem = vital functions."],
+[172,5,"Outer layer of brain:",["Cortex","Medulla","Meninges","Ventricle"],0,"Cortex = outer layer."],
+[173,5,"Nerve cell:",["Neuron","Nephron","Glia","Astrocyte"],0,"Neuron = nerve cell."],
+[174,5,"Junction between neurons:",["Synapse","Axon","Dendrite","Myelin"],0,"Synapse = junction."],
+[175,5,"Awareness of surroundings:",["Consciousness","Cognition","Sensation","Coordination"],0,"Consciousness = awareness."],
+[176,5,"Thinking process:",["Cognition","Sensation","Motor function","Reflex"],0,"Cognition = thinking."],
+[177,5,"Loss of speech:",["Aphasia","Dysarthria","Ataxia","Vertigo"],0,"Aphasia = loss of speech."],
+[178,5,"Difficulty speaking:",["Dysarthria","Aphasia","Ataxia","Syncope"],0,"Dysarthria = difficulty speaking."],
+[179,5,"Loss of coordination:",["Ataxia","Aphasia","Vertigo","Tremor"],0,"Ataxia = lack of coordination."],
+[180,5,"Spinning sensation:",["Vertigo","Syncope","Seizure","Coma"],0,"Vertigo = spinning."],
+[181,5,"Fainting:",["Syncope","Vertigo","Coma","Seizure"],0,"Syncope = fainting."],
+[182,5,"Sudden abnormal brain activity:",["Seizure","Syncope","Stroke","Tremor"],0,"Seizure = abnormal activity."],
+[183,5,"Involuntary shaking:",["Tremor","Paralysis","Paresthesia","Ataxia"],0,"Tremor = shaking."],
+[184,5,"Loss of movement:",["Paralysis","Paresthesia","Tremor","Syncope"],0,"Paralysis = loss of movement."],
+[185,5,"Tingling sensation:",["Paresthesia","Anesthesia","Analgesia","Hyperesthesia"],0,"Paresthesia = tingling."],
+[186,5,"Deep unconsciousness:",["Coma","Syncope","Sleep","Lethargy"],0,"Coma = deep unconsciousness."],
+[187,5,"Paralysis of one limb:",["Monoplegia","Hemiplegia","Paraplegia","Quadriplegia"],0,"Monoplegia = one limb."],
+[188,5,"Paralysis of one side:",["Hemiplegia","Monoplegia","Paraplegia","Quadriplegia"],0,"Hemiplegia = one side."],
+[189,5,"Paralysis of lower limbs:",["Paraplegia","Hemiplegia","Monoplegia","Quadriplegia"],0,"Paraplegia = lower limbs."],
+[190,5,"Paralysis of all limbs:",["Quadriplegia","Paraplegia","Hemiplegia","Monoplegia"],0,"Quadriplegia = all 4 limbs."],
+[191,5,"Interruption of blood to brain:",["Stroke (CVA)","Epilepsy","Meningitis","Parkinson"],0,"Stroke = blood supply cut."],
+[192,5,"Inflammation of meninges:",["Meningitis","Encephalitis","Neuritis","Myelitis"],0,"Meningitis = meninges inflammation."],
+[193,5,"Chronic seizure disorder:",["Epilepsy","Stroke","Alzheimer","Parkinson"],0,"Epilepsy = chronic seizures."],
+[194,5,"Disorder affecting movement (tremors):",["Parkinson Disease","Alzheimer","Epilepsy","Stroke"],0,"Parkinson = movement disorder."],
+[195,5,"Progressive memory loss:",["Alzheimer Disease","Parkinson","Epilepsy","MS"],0,"Alzheimer = memory loss."],
+[196,5,"Disease affecting myelin sheath:",["Multiple Sclerosis","Parkinson","Alzheimer","Epilepsy"],0,"MS affects myelin."],
+[197,5,"Record of brain electricity:",["EEG","ECG","EMG","CT scan"],0,"EEG = Electroencephalogram."],
+[198,5,"CSF collection procedure:",["Lumbar puncture","Craniotomy","Biopsy","EMG"],0,"Lumbar puncture = CSF tap."],
+[199,5,"Record of muscle electricity:",["EMG","EEG","ECG","MRI"],0,"EMG = Electromyography."],
+[200,5,"Opening skull:",["Craniotomy","Craniectomy","Laminectomy","Biopsy"],0,"Craniotomy = opening skull."],
+[201,5,"Removal of skull portion:",["Craniectomy","Craniotomy","Laminectomy","Shunt"],0,"Craniectomy = removal."],
+[202,5,"Drainage device for CSF:",["Shunt","Catheter","Stent","Tube"],0,"Shunt = drainage device."],
+[203,5,"ICP stands for:",["Intracranial pressure","Internal cranial pulse","Intensive care patient","Inter cranial part"],0,"ICP = Intracranial pressure."],
+[204,5,"GCS stands for:",["Glasgow coma scale","General coma score","Global consciousness scale","Great cerebral scale"],0,"GCS = Glasgow coma scale."],
+[205,5,"LOC stands for:",["Level of consciousness","Loss of control","Lack of cognition","Level of care"],0,"LOC = Level of consciousness."],
+[206,6,"Chewing and swallowing organ:",["Mouth","Stomach","Esophagus","Liver"],0,"Mouth = chewing."],
+[207,6,"Moves food to stomach:",["Esophagus","Trachea","Pharynx","Intestine"],0,"Esophagus = food pipe."],
+[208,6,"Digestion organ:",["Stomach","Liver","Gallbladder","Rectum"],0,"Stomach = digestion."],
+[209,6,"Nutrient absorption organ:",["Small intestine","Large intestine","Stomach","Liver"],0,"Small intestine = absorption."],
+[210,6,"Water absorption organ:",["Large intestine","Small intestine","Stomach","Pancreas"],0,"Large intestine = water absorption."],
+[211,6,"Stores feces:",["Rectum","Anus","Colon","Cecum"],0,"Rectum = stores feces."],
+[212,6,"Produces bile:",["Liver","Gallbladder","Pancreas","Stomach"],0,"Liver produces bile."],
+[213,6,"Stores bile:",["Gallbladder","Liver","Pancreas","Stomach"],0,"Gallbladder stores bile."],
+[214,6,"Produces digestive enzymes:",["Pancreas","Liver","Gallbladder","Spleen"],0,"Pancreas produces enzymes."],
+[215,6,"'gastr/o' means:",["Stomach","Intestine","Liver","Colon"],0,"gastr/o = stomach."],
+[216,6,"'enter/o' means:",["Intestine","Stomach","Liver","Colon"],0,"enter/o = intestine."],
+[217,6,"'hepat/o' means:",["Liver","Stomach","Intestine","Colon"],0,"hepat/o = liver."],
+[218,6,"'col/o' means:",["Colon","Liver","Rectum","Stomach"],0,"col/o = colon."],
+[219,6,"'proct/o' means:",["Rectum/Anus","Colon","Liver","Stomach"],0,"proct/o = rectum/anus."],
+[220,6,"'cholecyst/o' means:",["Gallbladder","Liver","Pancreas","Stomach"],0,"cholecyst/o = gallbladder."],
+[221,6,"'pancreat/o' means:",["Pancreas","Liver","Gallbladder","Stomach"],0,"pancreat/o = pancreas."],
+[222,6,"'esophag/o' means:",["Esophagus","Stomach","Mouth","Trachea"],0,"esophag/o = esophagus."],
+[223,6,"'or/o' means:",["Mouth","Teeth","Tongue","Lips"],0,"or/o = mouth."],
+[224,6,"'odont/o' means:",["Teeth","Mouth","Tongue","Gums"],0,"odont/o = teeth."],
+[225,6,"Taking food in:",["Ingestion","Digestion","Absorption","Defecation"],0,"Ingestion = taking food in."],
+[226,6,"Breaking down food:",["Digestion","Ingestion","Absorption","Peristalsis"],0,"Digestion = breaking down."],
+[227,6,"Nutrient uptake:",["Absorption","Digestion","Ingestion","Defecation"],0,"Absorption = uptake."],
+[228,6,"Elimination of feces:",["Defecation","Absorption","Digestion","Ingestion"],0,"Defecation = elimination."],
+[229,6,"Wave-like movement in GI:",["Peristalsis","Digestion","Ingestion","Absorption"],0,"Peristalsis = wave-like movement."],
+[230,6,"Feeling of vomiting:",["Nausea","Emesis","Dysphagia","Anorexia"],0,"Nausea = feeling of vomiting."],
+[231,6,"Expelling stomach contents:",["Vomiting","Nausea","Dysphagia","Anorexia"],0,"Vomiting = expelling."],
+[232,6,"Difficulty swallowing:",["Dysphagia","Nausea","Anorexia","Diarrhea"],0,"Dysphagia = difficulty swallowing."],
+[233,6,"Loss of appetite:",["Anorexia","Dysphagia","Nausea","Constipation"],0,"Anorexia = loss of appetite."],
+[234,6,"Difficulty passing stool:",["Constipation","Diarrhea","Melena","Ascites"],0,"Constipation = difficult stool."],
+[235,6,"Frequent loose stool:",["Diarrhea","Constipation","Melena","Ascites"],0,"Diarrhea = loose stool."],
+[236,6,"Vomiting blood:",["Hematemesis","Melena","Hemoptysis","Hematuria"],0,"Hematemesis = vomiting blood."],
+[237,6,"Black tarry stool:",["Melena","Hematochezia","Hematemesis","Ascites"],0,"Melena = black stool."],
+[238,6,"Yellow skin discoloration:",["Jaundice","Cyanosis","Pallor","Erythema"],0,"Jaundice = yellow skin."],
+[239,6,"Fluid in abdomen:",["Ascites","Edema","Effusion","Hematoma"],0,"Ascites = abdominal fluid."],
+[240,6,"Visual exam of GI tract:",["Endoscopy","Biopsy","Ultrasound","Radiograph"],0,"Endoscopy = visual exam."],
+[241,6,"Exam of colon:",["Colonoscopy","Endoscopy","Sigmoidoscopy","Gastroscopy"],0,"Colonoscopy = exam of colon."],
+[242,6,"Removal of appendix:",["Appendectomy","Gastrectomy","Colectomy","Cholecystectomy"],0,"Appendectomy = removal."],
+[243,6,"Removal of stomach:",["Gastrectomy","Appendectomy","Colectomy","Cholecystectomy"],0,"Gastrectomy = removal."],
+[244,6,"Opening of colon to skin:",["Colostomy","Colectomy","Gastrostomy","Ileostomy"],0,"Colostomy = opening."],
+[245,6,"Removal of gallbladder:",["Cholecystectomy","Appendectomy","Gastrectomy","Colectomy"],0,"Cholecystectomy = removal."],
+[246,6,"GERD means:",["Gastroesophageal Reflux Disease","Gastric Enzyme Reflux","General Enteric Rectal","Gastro Enteric Reflux"],0,"GERD = Acid reflux."],
+[247,6,"Inflammation of stomach lining:",["Gastritis","Enteritis","Colitis","Hepatitis"],0,"Gastritis = stomach inflammation."],
+[248,6,"Ulcer in stomach/duodenum:",["Peptic Ulcer Disease","Gastritis","Colitis","Appendicitis"],0,"PUD = ulcer."],
+[249,6,"Inflammation of stomach and intestines:",["Gastroenteritis","Gastritis","Enteritis","Colitis"],0,"Gastroenteritis = stomach + intestines."],
+[250,6,"Inflammation of appendix:",["Appendicitis","Gastritis","Colitis","Enteritis"],0,"Appendicitis = appendix inflammation."],
+[251,6,"Inflammation of liver:",["Hepatitis","Gastritis","Colitis","Enteritis"],0,"Hepatitis = liver inflammation."],
+[252,6,"Chronic liver damage:",["Cirrhosis","Hepatitis","Hepatomegaly","Jaundice"],0,"Cirrhosis = liver damage."],
+[253,6,"Inflammation of gallbladder:",["Cholecystitis","Hepatitis","Pancreatitis","Gastritis"],0,"Cholecystitis = gallbladder inflammation."],
+[254,6,"Gallstones:",["Cholelithiasis","Cholecystitis","Nephrolithiasis","Cirrhosis"],0,"Cholelithiasis = gallstones."],
+[255,6,"Swollen rectal veins:",["Hemorrhoids","Fissure","Proctitis","Polyp"],0,"Hemorrhoids = swollen veins."],
+[256,7,"Filter blood and produce urine:",["Kidneys","Ureters","Bladder","Urethra"],0,"Kidneys filter blood."],
+[257,7,"Carry urine to bladder:",["Ureters","Urethra","Kidneys","Nephrons"],0,"Ureters carry urine."],
+[258,7,"Stores urine:",["Bladder","Kidneys","Ureters","Urethra"],0,"Bladder stores urine."],
+[259,7,"Removes urine from body:",["Urethra","Ureters","Bladder","Kidneys"],0,"Urethra removes urine."],
+[260,7,"'nephr/o' means:",["Kidney","Bladder","Ureter","Urine"],0,"nephr/o = kidney."],
+[261,7,"'ren/o' means:",["Kidney","Bladder","Ureter","Urine"],0,"ren/o = kidney."],
+[262,7,"'cyst/o' means:",["Bladder","Kidney","Ureter","Urine"],0,"cyst/o = bladder."],
+[263,7,"'ureter/o' means:",["Ureter","Urethra","Bladder","Kidney"],0,"ureter/o = ureter."],
+[264,7,"'urethr/o' means:",["Urethra","Ureter","Bladder","Kidney"],0,"urethr/o = urethra."],
+[265,7,"'urin/o' means:",["Urine","Bladder","Kidney","Ureter"],0,"urin/o = urine."],
+[266,7,"'lith/o' means:",["Stone","Water","Blood","Pus"],0,"lith/o = stone."],
+[267,7,"Painful urination:",["Dysuria","Hematuria","Polyuria","Anuria"],0,"Dysuria = painful urination."],
+[268,7,"Blood in urine:",["Hematuria","Dysuria","Polyuria","Anuria"],0,"Hematuria = blood in urine."],
+[269,7,"Excessive urination:",["Polyuria","Oliguria","Anuria","Dysuria"],0,"Polyuria = excessive urine."],
+[270,7,"Reduced urine output:",["Oliguria","Polyuria","Anuria","Dysuria"],0,"Oliguria = reduced output."],
+[271,7,"No urine output:",["Anuria","Oliguria","Polyuria","Dysuria"],0,"Anuria = no urine."],
+[272,7,"Night urination:",["Nocturia","Dysuria","Hematuria","Polyuria"],0,"Nocturia = night urination."],
+[273,7,"Inability to empty bladder:",["Retention","Incontinence","Frequency","Urgency"],0,"Retention = inability to empty."],
+[274,7,"Loss of bladder control:",["Incontinence","Retention","Frequency","Urgency"],0,"Incontinence = loss of control."],
+[275,7,"Protein in urine:",["Proteinuria","Hematuria","Pyuria","Glycosuria"],0,"Proteinuria = protein."],
+[276,7,"Pus in urine:",["Pyuria","Hematuria","Proteinuria","Glycosuria"],0,"Pyuria = pus."],
+[277,7,"Kidney removal:",["Nephrectomy","Lithotripsy","Dialysis","Urostomy"],0,"Nephrectomy = kidney removal."],
+[278,7,"Stone crushing:",["Lithotripsy","Nephrectomy","Dialysis","Urostomy"],0,"Lithotripsy = crushing stones."],
+[279,7,"Artificial blood filtration:",["Dialysis","Lithotripsy","Nephrectomy","Urostomy"],0,"Dialysis = artificial filtration."],
+[280,7,"UTI stands for:",["Urinary tract infection","Urine test index","Urea tract inflammation","Uric test indicator"],0,"UTI = Urinary tract infection."],
+[281,8,"'oste/o' means:",["Bone","Muscle","Joint","Cartilage"],0,"oste/o = bone."],
+[282,8,"'arthr/o' means:",["Joint","Bone","Muscle","Tendon"],0,"arthr/o = joint."],
+[283,8,"'my/o' means:",["Muscle","Bone","Joint","Cartilage"],0,"my/o = muscle."],
+[284,8,"'chondr/o' means:",["Cartilage","Bone","Joint","Muscle"],0,"chondr/o = cartilage."],
+[285,8,"'tend/o' means:",["Tendon","Ligament","Muscle","Bone"],0,"tend/o = tendon."],
+[286,8,"Connects bone to bone:",["Ligament","Tendon","Cartilage","Muscle"],0,"Ligament = bone to bone."],
+[287,8,"Connects muscle to bone:",["Tendon","Ligament","Cartilage","Joint"],0,"Tendon = muscle to bone."],
+[288,8,"Voluntary muscle:",["Skeletal muscle","Smooth muscle","Cardiac muscle","Visceral muscle"],0,"Skeletal = voluntary."],
+[289,8,"Involuntary muscle:",["Smooth muscle","Skeletal muscle","Cardiac muscle","Striated muscle"],0,"Smooth = involuntary."],
+[290,8,"Heart contraction muscle:",["Cardiac muscle","Smooth muscle","Skeletal muscle","Visceral muscle"],0,"Cardiac = heart."],
+[291,8,"Inflammation of joint:",["Arthritis","Myositis","Osteitis","Tendinitis"],0,"Arthritis = joint inflammation."],
+[292,8,"Muscle pain:",["Myalgia","Arthralgia","Neuralgia","Ostealgia"],0,"Myalgia = muscle pain."],
+[293,8,"Bone tumor:",["Osteoma","Myoma","Arthroma","Chondroma"],0,"Osteoma = bone tumor."],
+[294,8,"Surgical repair of joint:",["Arthroplasty","Arthroscopy","Arthrotomy","Arthrodesis"],0,"Arthroplasty = repair."],
+[295,8,"Visual exam of joint:",["Arthroscopy","Arthroplasty","Arthrotomy","Arthrodesis"],0,"Arthroscopy = visual exam."],
+[296,8,"Degenerative joint disease:",["Osteoarthritis","Rheumatoid arthritis","Osteoporosis","Scoliosis"],0,"Osteoarthritis = degenerative."],
+[297,8,"Autoimmune joint disease:",["Rheumatoid arthritis","Osteoarthritis","Osteoporosis","Scoliosis"],0,"RA = autoimmune."],
+[298,8,"Loss of bone density:",["Osteoporosis","Osteoarthritis","Scoliosis","Fracture"],0,"Osteoporosis = bone loss."],
+[299,8,"Break in bone continuity:",["Fracture","Sprain","Strain","Scoliosis"],0,"Fracture = break."],
+[300,8,"Abnormal lateral curve of spine:",["Scoliosis","Kyphosis","Lordosis","Osteoporosis"],0,"Scoliosis = lateral curve."]
+];
 
-        <!-- Category & Stats Bar -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
-                <div>
-                    <p class="text-xs uppercase font-bold text-slate-400 tracking-wider">Total Questions</p>
-                    <p class="text-2xl font-black text-slate-800" id="stat-total">300</p>
-                </div>
-                <div class="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-lg flex items-center justify-center text-lg font-bold">
-                    <i class="fa-solid fa-list-check"></i>
-                </div>
-            </div>
+const db = rawData.map(r => ({id:r[0], cat:cats[r[1]], q:r[2], opts:r[3], ans:r[4], exp:r[5]}));
+let filtered = [...db];
+let curr = 0;
+let userAns = {};
 
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
-                <div>
-                    <p class="text-xs uppercase font-bold text-slate-400 tracking-wider">Answered</p>
-                    <p class="text-2xl font-black text-slate-800" id="stat-answered">0</p>
-                </div>
-                <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center text-lg font-bold">
-                    <i class="fa-solid fa-pen-to-square"></i>
-                </div>
-            </div>
+function loadCategory() {
+    const filter = document.getElementById('cat-filter').value;
+    if(filter == "-1") filtered = [...db];
+    else filtered = db.filter(q => q.cat === cats[filter]);
+    curr = 0;
+    render();
+}
 
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
-                <div>
-                    <p class="text-xs uppercase font-bold text-slate-400 tracking-wider">Accuracy</p>
-                    <p class="text-2xl font-black text-emerald-600" id="stat-accuracy">0%</p>
-                </div>
-                <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center text-lg font-bold">
-                    <i class="fa-solid fa-bullseye"></i>
-                </div>
-            </div>
+function render() {
+    if(filtered.length === 0) return;
+    const q = filtered[curr];
+    document.getElementById('q-counter').innerText = `Question ${curr + 1} / ${filtered.length}`;
+    document.getElementById('q-cat-label').innerText = q.cat;
+    document.getElementById('q-text').innerText = `${q.id}. ${q.q}`;
+    
+    const container = document.getElementById('options-container');
+    container.innerHTML = '';
+    
+    const answered = userAns[q.id] !== undefined;
+    const chosen = userAns[q.id];
 
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
-                <div>
-                    <p class="text-xs uppercase font-bold text-slate-400 tracking-wider">Bookmarks</p>
-                    <p class="text-2xl font-black text-amber-600" id="stat-bookmarked">0</p>
-                </div>
-                <div class="w-10 h-10 bg-amber-50 text-amber-600 rounded-lg flex items-center justify-center text-lg font-bold">
-                    <i class="fa-solid fa-bookmark"></i>
-                </div>
+    q.opts.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.onclick = () => { if(!answered){ userAns[q.id] = idx; render(); } };
+        
+        let cls = "w-full text-left p-4 rounded-xl border font-semibold flex items-center transition ";
+        if(!answered) cls += "bg-white border-slate-200 hover:border-indigo-400";
+        else {
+            if(idx === q.ans) cls += "bg-emerald-50 border-emerald-500 text-emerald-800";
+            else if(idx === chosen) cls += "bg-rose-50 border-rose-500 text-rose-800";
+            else cls += "bg-white border-slate-200 opacity-50";
+        }
+        
+        btn.className = cls;
+        btn.innerHTML = `<span class="mr-3 flex-shrink-0 w-8 h-8 rounded-full border border-slate-300 flex items-center justify-center text-sm ${answered && idx === q.ans ? 'bg-emerald-500 text-white border-none' : ''} ${answered && idx === chosen && idx !== q.ans ? 'bg-rose-500 text-white border-none' : ''}">${String.fromCharCode(65+idx)}</span> ${opt}`;
+        container.appendChild(btn);
+    });
+
+    const expBox = document.getElementById('explanation-box');
+    if(answered) {
+        expBox.classList.remove('hidden');
+        expBox.innerHTML = `<strong><i class="fa-solid fa-circle-info mr-1"></i>Explanation:</strong> ${q.exp}`;
+    } else {
+        expBox.classList.add('hidden');
+    }
+}
+
+function nextQ() { if(curr < filtered.length - 1) { curr++; render(); } }
+function prevQ() { if(curr > 0) { curr--; render(); } }
+
+window.onload = render;
+</script>
+</body>
+</html>
             </div>
         </div>
 
