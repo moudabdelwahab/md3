@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Terminology Interactive Question Bank (300 MCQs)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+
+    <!-- Header Navigation -->
+    <header class="bg-slate-900 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-indigo-600 p-2 rounded-lg text-white">
+                    <i class="fa-solid me-0 fa-notes-medical text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight">MedTerm Mastery</h1>
+                    <p class="text-xs text-indigo-300">300 Fundamental Review MCQs</p>
+                </div>
+            </div>
+            
+            <!-- Navigation Tabs -->
+            <nav class="flex space-x-1 sm:space-x-2 bg-slate-800 p-1 rounded-xl">
+                <button id="nav-practice" onclick="switchTab('practice')" class="px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors bg-indigo-600 text-white shadow">
+                    <i class="fa-solid fa-graduation-cap mr-1 sm:mr-2"></i>Practice
+                </button>
+                <button id="nav-exam" onclick="switchTab('exam')" class="px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium text-slate-300 hover:text-white transition-colors">
+                    <i class="fa-solid fa-stopwatch mr-1 sm:mr-2"></i>Exam Mode
+                </button>
+                <button id="nav-browse" onclick="switchTab('browse')" class="px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium text-slate-300 hover:text-white transition-colors">
+                    <i class="fa-solid fa-book-open mr-1 sm:mr-2"></i>Browse All
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- Category & Stats Bar -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-xs uppercase font-bold text-slate-400 tracking-wider">Total Questions</p>
+                    <p class="text-2xl font-black text-slate-800" id="stat-total">300</p>
+                </div>
+                <div class="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-lg flex items-center justify-center text-lg font-bold">
+                    <i class="fa-solid fa-list-check"></i>
+                </div>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-xs uppercase font-bold text-slate-400 tracking-wider">Answered</p>
+                    <p class="text-2xl font-black text-slate-800" id="stat-answered">0</p>
+                </div>
+                <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center text-lg font-bold">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </div>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-xs uppercase font-bold text-slate-400 tracking-wider">Accuracy</p>
+                    <p class="text-2xl font-black text-emerald-600" id="stat-accuracy">0%</p>
+                </div>
+                <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center text-lg font-bold">
+                    <i class="fa-solid fa-bullseye"></i>
+                </div>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-xs uppercase font-bold text-slate-400 tracking-wider">Bookmarks</p>
+                    <p class="text-2xl font-black text-amber-600" id="stat-bookmarked">0</p>
+                </div>
+                <div class="w-10 h-10 bg-amber-50 text-amber-600 rounded-lg flex items-center justify-center text-lg font-bold">
+                    <i class="fa-solid fa-bookmark"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: Practice Mode -->
+        <section id="section-practice" class="space-y-6">
+            <!-- Filter Options -->
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
+                <div class="flex items-center space-x-2 w-full md:w-auto">
+                    <label class="text-sm font-bold text-slate-600 whitespace-nowrap"><i class="fa-solid fa-filter mr-1 text-indigo-500"></i>Category:</label>
+                    <select id="practice-category" onchange="filterPracticeCategory()" class="bg-slate-50 border border-slate-300 text-slate-800 text-sm rounded-lg p-2.5 w-full md:w-64 focus:ring-indigo-500 focus:border-indigo-500 font-medium">
+                        <option value="All">All Topics (300 Questions)</option>
+                        <option value="General & Roots">General Roots & Prefixes</option>
+                        <option value="Hematology">Hematology System</option>
+                        <option value="Endocrine">Endocrine System</option>
+                        <option value="Cardiovascular">Cardiovascular System</option>
+                        <option value="Nervous">Nervous System</option>
+                        <option value="Gastrointestinal">Gastrointestinal System</option>
+                        <option value="Urinary & Musculoskeletal">Urinary & Musculoskeletal</option>
+                    </select>
+                </div>
+
+                <div class="flex items-center space-x-3 w-full md:w-auto justify-end">
+                    <button onclick="resetPracticeProgress()" class="text-xs text-rose-600 hover:text-rose-800 font-semibold px-3 py-2 border border-rose-200 hover:bg-rose-50 rounded-lg transition-colors">
+                        <i class="fa-solid fa-rotate-right mr-1"></i>Reset Progress
+                    </button>
+                    <span id="practice-counter" class="text-xs font-bold bg-indigo-50 text-indigo-700 px-3 py-2 rounded-lg border border-indigo-100">
+                        Question 1 / 300
+                    </span>
+                </div>
+            </div>
+
+            <!-- Quiz Card -->
+            <div id="quiz-card" class="bg-white rounded-2xl border border-slate-200 shadow-lg p-6 sm:p-8 space-y-6 relative overflow-hidden">
+                <div class="flex justify-between items-start border-b border-slate-100 pb-4">
+                    <div>
+                        <span id="q-category" class="inline-block bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider mb-2">Hematology</span>
+                        <h2 id="q-title" class="text-lg sm:text-xl font-bold text-slate-900 leading-snug">Question text goes here...</h2>
+                    </div>
+                    <button id="bookmark-btn" onclick="toggleBookmarkCurrent()" class="text-slate-300 hover:text-amber-500 text-2xl transition-colors p-1">
+                        <i class="fa-solid fa-bookmark"></i>
+                    </button>
+                </div>
+
+                <!-- Options -->
+                <div id="q-options" class="grid grid-cols-1 gap-3">
+                    <!-- Dynamic Answer Options -->
+                </div>
+
+                <!-- Explanation Box -->
+                <div id="q-explanation" class="hidden bg-slate-50 border-l-4 border-indigo-500 p-4 rounded-r-xl space-y-1">
+                    <p class="text-xs font-bold text-indigo-800 uppercase tracking-wide"><i class="fa-solid fa-circle-info mr-1"></i> Explanation</p>
+                    <p id="q-explanation-text" class="text-sm text-slate-700 leading-relaxed"></p>
+                </div>
+
+                <!-- Navigation Controls -->
+                <div class="flex justify-between items-center pt-4 border-t border-slate-100">
+                    <button id="btn-prev" onclick="prevQuestion()" class="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-semibold text-sm hover:bg-slate-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+                        <i class="fa-solid fa-arrow-left mr-2"></i>Previous
+                    </button>
+                    <div class="flex space-x-2">
+                        <button id="btn-next" onclick="nextQuestion()" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-md transition-colors">
+                            Next<i class="fa-solid fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Exam Mode -->
+        <section id="section-exam" class="hidden space-y-6">
+            <div id="exam-setup" class="bg-white p-8 rounded-2xl border border-slate-200 shadow-lg text-center max-w-2xl mx-auto space-y-6">
+                <div class="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-3xl mx-auto">
+                    <i class="fa-solid fa-stopwatch"></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900">Timed Practice Exam</h2>
+                    <p class="text-sm text-slate-500 mt-1">Select your exam setup to start a simulated quiz test session.</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Number of Questions</label>
+                        <select id="exam-length" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium">
+                            <option value="20">20 Questions (Quick Review)</option>
+                            <option value="50" selected>50 Questions (Standard Exam)</option>
+                            <option value="100">100 Questions (Comprehensive)</option>
+                            <option value="300">All 300 Questions (Full Bank Test)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Category Scope</label>
+                        <select id="exam-category" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm font-medium">
+                            <option value="All">All Topics Combined</option>
+                            <option value="General & Roots">General Roots & Prefixes</option>
+                            <option value="Hematology">Hematology System</option>
+                            <option value="Endocrine">Endocrine System</option>
+                            <option value="Cardiovascular">Cardiovascular System</option>
+                            <option value="Nervous">Nervous System</option>
+                            <option value="Gastrointestinal">Gastrointestinal System</option>
+                            <option value="Urinary & Musculoskeletal">Urinary & Musculoskeletal</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button onclick="startExamMode()" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg transition-colors text-base">
+                    Start Test Now
+                </button>
+            </div>
+
+            <!-- Active Exam Screen -->
+            <div id="exam-active" class="hidden bg-white rounded-2xl border border-slate-200 shadow-lg p-6 sm:p-8 space-y-6">
+                <div class="flex justify-between items-center border-b border-slate-100 pb-4">
+                    <span id="exam-progress-text" class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Exam Question 1 / 50</span>
+                    <button onclick="submitExamEarly()" class="text-xs text-rose-600 font-bold hover:bg-rose-50 px-3 py-1.5 rounded-lg border border-rose-200">
+                        End & Submit
+                    </button>
+                </div>
+
+                <div class="space-y-4">
+                    <h2 id="exam-q-title" class="text-lg font-bold text-slate-900 leading-snug">Question text...</h2>
+                    <div id="exam-q-options" class="grid grid-cols-1 gap-3">
+                        <!-- Options for exam -->
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center pt-4 border-t border-slate-100">
+                    <button id="exam-prev" onclick="prevExamQuestion()" class="px-5 py-2.5 border border-slate-300 rounded-xl text-slate-700 font-semibold text-sm hover:bg-slate-50">
+                        Previous
+                    </button>
+                    <button id="exam-next" onclick="nextExamQuestion()" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-xl shadow-md">
+                        Next Question
+                    </button>
+                </div>
+            </div>
+
+            <!-- Exam Results Summary -->
+            <div id="exam-results" class="hidden bg-white p-8 rounded-2xl border border-slate-200 shadow-xl max-w-3xl mx-auto space-y-6 text-center">
+                <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-4xl mx-auto">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <div>
+                    <h2 class="text-3xl font-black text-slate-900">Exam Completed!</h2>
+                    <p class="text-slate-500 text-sm mt-1">Here is your performance overview.</p>
+                </div>
+
+                <div class="grid grid-cols-3 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase">Score</p>
+                        <p id="res-score" class="text-2xl font-black text-slate-800">0 / 0</p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase">Percentage</p>
+                        <p id="res-percent" class="text-2xl font-black text-indigo-600">0%</p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase">Grade</p>
+                        <p id="res-grade" class="text-2xl font-black text-emerald-600">Pass</p>
+                    </div>
+                </div>
+
+                <div id="exam-review-container" class="text-left space-y-4 max-h-96 overflow-y-auto custom-scrollbar border border-slate-200 p-4 rounded-xl">
+                    <h3 class="font-bold text-slate-800 border-b pb-2">Question Breakdown & Explanations</h3>
+                    <div id="exam-review-list" class="space-y-4"></div>
+                </div>
+
+                <button onclick="resetExamSetup()" class="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md transition-colors">
+                    Try Another Test
+                </button>
+            </div>
+        </section>
+
+        <!-- Section: Browse & Search All 300 Questions -->
+        <section id="section-browse" class="hidden space-y-6">
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-4 justify-between items-center">
+                <div class="relative w-full md:w-96">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400"></i>
+                    <input type="text" id="browse-search" oninput="renderBrowseList()" placeholder="Search terms, concepts, questions..." class="w-full bg-slate-50 border border-slate-300 rounded-xl pl-10 pr-4 py-2.5 text-sm font-medium focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+
+                <div class="flex items-center space-x-2 w-full md:w-auto">
+                    <select id="browse-category" onchange="renderBrowseList()" class="w-full md:w-64 bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm font-medium">
+                        <option value="All">All Categories (300 Questions)</option>
+                        <option value="General & Roots">General Roots & Prefixes</option>
+                        <option value="Hematology">Hematology System</option>
+                        <option value="Endocrine">Endocrine System</option>
+                        <option value="Cardiovascular">Cardiovascular System</option>
+                        <option value="Nervous">Nervous System</option>
+                        <option value="Gastrointestinal">Gastrointestinal System</option>
+                        <option value="Urinary & Musculoskeletal">Urinary & Musculoskeletal</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="browse-list" class="space-y-4">
+                <!-- Dynamically filled with cards -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-6 border-t border-slate-800 text-center text-xs">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>© Medical Terminology Interactive Question Bank. All 300 Questions strictly in English based on official course materials.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Data & Logic -->
+    <script>
+        // Full Array of 300 Easy Medical Terminology MCQs based on PDFs
+        const questionsData = [
+            // --- GENERAL ROOTS, PREFIXES, SUFFIXES (Questions 1 to 45) ---
+            { id: 1, category: "General & Roots", question: "What is the meaning of the medical prefix 'hem-' or 'hemo-'?", options: ["Blood", "Water", "Liver", "Bone"], answer: 0, explanation: "The prefix 'hem-' or 'hemo-' refers directly to blood (e.g., Hemoglobin, Hemophilia)." },
+            { id: 2, category: "General & Roots", question: "Which prefix means 'white' in medical terminology?", options: ["leuk/o", "erythr/o", "cyan/o", "melan/o"], answer: 0, explanation: "'Leuk/o' stands for white (e.g., Leukocyte = white blood cell)." },
+            { id: 3, category: "General & Roots", question: "The prefix 'erythr/o' means which color?", options: ["Red", "Yellow", "Blue", "Black"], answer: 0, explanation: "'Erythr/o' means red (e.g., Erythrocyte = red blood cell)." },
+            { id: 4, category: "General & Roots", question: "What does the combining form 'thromb/o' refer to?", options: ["Clot", "Vein", "Artery", "Heart"], answer: 0, explanation: "'Thromb/o' refers to a blood clot (e.g., Thrombosis)." },
+            { id: 5, category: "General & Roots", question: "The suffix '-emia' refers to a condition of the:", options: ["Blood", "Skin", "Bones", "Kidneys"], answer: 0, explanation: "The suffix '-emia' means blood condition (e.g., Anemia, Glycemia)." },
+            { id: 6, category: "General & Roots", question: "What does the suffix '-cyte' mean?", options: ["Cell", "Tissue", "Organ", "Fluid"], answer: 0, explanation: "'-cyte' means cell (e.g., Leukocyte, Erythrocyte)." },
+            { id: 7, category: "General & Roots", question: "Which suffix means 'deficiency' or decrease in number?", options: ["-penia", "-osis", "-oma", "-itis"], answer: 0, explanation: "'-penia' signifies deficiency or lack (e.g., Leukopenia)." },
+            { id: 8, category: "General & Roots", question: "The suffix '-osis' generally indicates an abnormal condition or:", options: ["Increase / abnormal condition", "Surgical removal", "Inflammation", "Pain"], answer: 0, explanation: "'-osis' denotes an abnormal condition or excessive state (e.g., Leukocytosis)." },
+            { id: 9, category: "General & Roots", question: "What does the suffix '-oma' mean?", options: ["Tumor or mass", "Infection", "Rupture", "Dilation"], answer: 0, explanation: "'-oma' refers to a tumor, mass, or swelling (e.g., Lymphoma, Adenoma)." },
+            { id: 10, category: "General & Roots", question: "Which suffix means 'disease'?", options: ["-pathy", "-lysis", "-poiesis", "-ectomy"], answer: 0, explanation: "'-pathy' means disease process (e.g., Neuropathy, Hemopathy)." },
+            { id: 11, category: "General & Roots", question: "The suffix '-lysis' means:", options: ["Destruction or breakdown", "Formation", "Suturing", "Incision"], answer: 0, explanation: "'-lysis' means breakdown, destruction, or separation (e.g., Hemolysis)." },
+            { id: 12, category: "General & Roots", question: "What does the suffix '-poiesis' mean?", options: ["Formation or production", "Removal", "Stitch", "Enlargement"], answer: 0, explanation: "'-poiesis' means formation or creation (e.g., Hematopoiesis)." },
+            { id: 13, category: "General & Roots", question: "Which prefix means 'excessive', 'high', or 'above normal'?", options: ["Hyper-", "Hypo-", "Eu-", "A-"], answer: 0, explanation: "'Hyper-' means elevated, high, or excessive." },
+            { id: 14, category: "General & Roots", question: "The prefix 'Hypo-' means:", options: ["Low or deficient", "High or elevated", "Normal", "Fast"], answer: 0, explanation: "'Hypo-' means low, deficient, or under." },
+            { id: 15, category: "General & Roots", question: "Which prefix means 'normal' or 'good'?", options: ["Eu-", "Poly-", "Tachy-", "Brady-"], answer: 0, explanation: "'Eu-' indicates normal, healthy, or good (e.g., Euglycemia)." },
+            { id: 16, category: "General & Roots", question: "What does the prefix 'Poly-' mean?", options: ["Many or excessive", "Single", "Small", "Fast"], answer: 0, explanation: "'Poly-' means many, multiple, or excessive (e.g., Polyuria)." },
+            { id: 17, category: "General & Roots", question: "The prefix 'A-' or 'An-' means:", options: ["Without or absence of", "Above", "Inside", "Through"], answer: 0, explanation: "'A-' or 'An-' means without, lacking, or absent (e.g., Anemia, Anuria)." },
+            { id: 18, category: "General & Roots", question: "Which prefix means 'slow'?", options: ["Brady-", "Tachy-", "Micro-", "Macro-"], answer: 0, explanation: "'Brady-' means slow (e.g., Bradycardia)." },
+            { id: 19, category: "General & Roots", question: "What does the prefix 'Tachy-' mean?", options: ["Fast or rapid", "Slow", "Hard", "Weak"], answer: 0, explanation: "'Tachy-' means rapid or fast (e.g., Tachycardia)." },
+            { id: 20, category: "General & Roots", question: "The word root 'gastr/o' refers to the:", options: ["Stomach", "Liver", "Colon", "Heart"], answer: 0, explanation: "'Gastr/o' relates to the stomach (e.g., Gastritis)." },
+            { id: 21, category: "General & Roots", question: "The word root 'hepat/o' means:", options: ["Liver", "Kidney", "Spleen", "Lung"], answer: 0, explanation: "'Hepat/o' means liver (e.g., Hepatitis)." },
+            { id: 22, category: "General & Roots", question: "What does 'nephr/o' or 'ren/o' refer to?", options: ["Kidney", "Nerve", "Joint", "Blood vessel"], answer: 0, explanation: "'Nephr/o' and 'ren/o' both refer to the kidney." },
+            { id: 23, category: "General & Roots", question: "The word root 'cardi/o' refers to the:", options: ["Heart", "Lungs", "Brain", "Muscle"], answer: 0, explanation: "'Cardi/o' refers to the heart (e.g., Cardiology)." },
+            { id: 24, category: "General & Roots", question: "Which root word means 'bone'?", options: ["oste/o", "my/o", "arthr/o", "chondr/o"], answer: 0, explanation: "'Oste/o' means bone (e.g., Osteocyte, Osteoporosis)." },
+            { id: 25, category: "General & Roots", question: "The root word 'my/o' refers to:", options: ["Muscle", "Bone marrow", "Spinal cord", "Fasciitis"], answer: 0, explanation: "'My/o' means muscle (e.g., Myocardium, Myalgia)." },
+            { id: 26, category: "General & Roots", question: "What does 'arthr/o' refer to?", options: ["Joint", "Artery", "Vein", "Nerve"], answer: 0, explanation: "'Arthr/o' refers to a joint (e.g., Arthritis)." },
+            { id: 27, category: "General & Roots", question: "The suffix '-itis' stands for:", options: ["Inflammation", "Removal", "Pain", "Suture"], answer: 0, explanation: "'-itis' indicates inflammation (e.g., Gastritis, Hepatitis)." },
+            { id: 28, category: "General & Roots", question: "Which suffix means 'surgical removal' or excision?", options: ["-ectomy", "-otomy", "-stomy", "-plasty"], answer: 0, explanation: "'-ectomy' means surgical excision/removal (e.g., Appendectomy)." },
+            { id: 29, category: "General & Roots", question: "The suffix '-otomy' means:", options: ["Surgical incision / cutting into", "Removal", "Creating an opening", "Repair"], answer: 0, explanation: "'-otomy' means cutting into or surgical incision." },
+            { id: 30, category: "General & Roots", question: "What does the suffix '-stomy' mean?", options: ["Creation of an artificial opening", "Incision", "Destruction", "Suture"], answer: 0, explanation: "'-stomy' means creating a surgical opening/mouth (e.g., Colostomy)." },
+            { id: 31, category: "General & Roots", question: "The suffix '-algia' means:", options: ["Pain", "Blood condition", "Enlargement", "Softening"], answer: 0, explanation: "'-algia' means pain (e.g., Neuralgia, Myalgia)." },
+            { id: 32, category: "General & Roots", question: "What does 'neur/o' refer to?", options: ["Nerve", "Kidney", "Brain cell", "Vessel"], answer: 0, explanation: "'Neur/o' refers to nerves or nervous system." },
+            { id: 33, category: "General & Roots", question: "The root word 'encephal/o' means:", options: ["Brain", "Skull", "Spinal cord", "Head"], answer: 0, explanation: "'Encephal/o' means brain (e.g., Encephalitis)." },
+            { id: 34, category: "General & Roots", question: "The combining form 'myel/o' refers to bone marrow or:", options: ["Spinal cord", "Muscle", "Brain", "Vein"], answer: 0, explanation: "'Myel/o' means bone marrow or spinal cord." },
+            { id: 35, category: "General & Roots", question: "Which term suffix means 'enlargement'?", options: ["-megaly", "-malacia", "-sclerosis", "-stenosis"], answer: 0, explanation: "'-megaly' means enlargement (e.g., Splenomegaly)." },
+            { id: 36, category: "General & Roots", question: "What does '-sclerosis' mean?", options: ["Hardening", "Softening", "Dilation", "Narrowing"], answer: 0, explanation: "'-sclerosis' means abnormal hardening." },
+            { id: 37, category: "General & Roots", question: "The suffix '-stenosis' means:", options: ["Narrowing or constriction", "Dilation", "Rupture", "Flow"], answer: 0, explanation: "'-stenosis' means narrowing or stricture." },
+            { id: 38, category: "General & Roots", question: "Which combining form means 'vein'?", options: ["phleb/o", "arteri/o", "angi/o", "vas/o"], answer: 0, explanation: "'Phleb/o' or 'ven/o' means vein." },
+            { id: 39, category: "General & Roots", question: "What does 'arteri/o' mean?", options: ["Artery", "Vein", "Capillary", "Blood"], answer: 0, explanation: "'Arteri/o' refers to arteries." },
+            { id: 40, category: "General & Roots", question: "The root 'angi/o' means:", options: ["Vessel (blood or lymph)", "Joint", "Gland", "Muscle"], answer: 0, explanation: "'Angi/o' means blood vessel or lymphatic vessel." },
+            { id: 41, category: "General & Roots", question: "What does the combining form 'aden/o' mean?", options: ["Gland", "Joint", "Nerve", "Fat"], answer: 0, explanation: "'Aden/o' means gland (e.g., Adenoma)." },
+            { id: 42, category: "General & Roots", question: "The prefix 'Dys-' indicates:", options: ["Painful, difficult, or abnormal", "Good, normal", "Fast", "Slow"], answer: 0, explanation: "'Dys-' means painful, difficult, or disordered (e.g., Dyspnea, Dysuria)." },
+            { id: 43, category: "General & Roots", question: "What does the prefix 'Endo-' mean?", options: ["Within or inside", "Outside", "Around", "Through"], answer: 0, explanation: "'Endo-' means within or inside (e.g., Endocrine)." },
+            { id: 44, category: "General & Roots", question: "The prefix 'Exo-' or 'Ecto-' means:", options: ["Outside or outward", "Inside", "Below", "Above"], answer: 0, explanation: "'Exo-' or 'Ecto-' means outside." },
+            { id: 45, category: "General & Roots", question: "What does 'glyc/o' mean?", options: ["Sugar or glucose", "Fat", "Protein", "Water"], answer: 0, explanation: "'Glyc/o' refers to sugar/glucose." },
+
+            // --- HEMATOLOGY SYSTEM (Questions 46 to 90) ---
+            { id: 46, category: "Hematology", question: "Hematology is the study of:", options: ["Blood and blood-forming tissues", "The kidneys", "Hormones", "Skin"], answer: 0, explanation: "Hematology is the medical branch studying blood and its disorders." },
+            { id: 47, category: "Hematology", question: "Which blood component carries oxygen throughout the body?", options: ["Red blood cells (RBCs)", "White blood cells (WBCs)", "Platelets", "Plasma"], answer: 0, explanation: "RBCs (Erythrocytes) transport oxygen using hemoglobin." },
+            { id: 48, category: "Hematology", question: "What is the primary function of White Blood Cells (WBCs)?", options: ["Fight infection", "Carry oxygen", "Blood clotting", "Fluid balance"], answer: 0, explanation: "WBCs (Leukocytes) protect the body against pathogens and infections." },
+            { id: 49, category: "Hematology", question: "Platelets (Thrombocytes) are mainly responsible for:", options: ["Blood clotting", "Carrying glucose", "Fighting bacteria", "Producing antibodies"], answer: 0, explanation: "Platelets initiate clotting to stop bleeding." },
+            { id: 50, category: "Hematology", question: "What is the fluid, liquid portion of blood called?", options: ["Plasma", "Hemoglobin", "Lymph", "Serum"], answer: 0, explanation: "Plasma is the liquid matrix of blood." },
+            { id: 51, category: "Hematology", question: "The process of blood cell formation in bone marrow is termed:", options: ["Hematopoiesis", "Hemolysis", "Hemostasis", "Hemopathy"], answer: 0, explanation: "Hematopoiesis is the creation of blood cells in bone marrow." },
+            { id: 52, category: "Hematology", question: "Hemoglobin is an oxygen-carrying protein found inside:", options: ["Red blood cells", "White blood cells", "Platelets", "Plasma"], answer: 0, explanation: "Hemoglobin (Hb) is the iron-rich protein in RBCs." },
+            { id: 53, category: "Hematology", question: "Hematocrit (Hct) measures:", options: ["Percentage of RBCs in blood", "White cell count", "Platelet count", "Clotting time"], answer: 0, explanation: "Hematocrit represents the percentage volume of RBCs in whole blood." },
+            { id: 54, category: "Hematology", question: "The breakdown or destruction of Red Blood Cells is known as:", options: ["Hemolysis", "Hematopoiesis", "Hemostasis", "Thrombosis"], answer: 0, explanation: "Hemolysis is the destruction/rupture of red blood cells." },
+            { id: 55, category: "Hematology", question: "Which type of WBC specifically fights bacterial infections?", options: ["Neutrophils", "Eosinophils", "Basophils", "Monocytes"], answer: 0, explanation: "Neutrophils are the first responders against bacterial infections." },
+            { id: 56, category: "Hematology", question: "Which WBCs provide adaptive immunity and produce antibodies?", options: ["Lymphocytes", "Basophils", "Neutrophils", "Eosinophils"], answer: 0, explanation: "Lymphocytes play a crucial role in immune system response." },
+            { id: 57, category: "Hematology", question: "Monocytes function primarily to:", options: ["Remove debris and phagocytose bacteria", "Release histamine", "Clot blood", "Carry iron"], answer: 0, explanation: "Monocytes clean up cellular debris and pathogens." },
+            { id: 58, category: "Hematology", question: "Which WBC is involved in allergic reactions and defense against parasites?", options: ["Eosinophils", "Neutrophils", "Platelets", "RBCs"], answer: 0, explanation: "Eosinophils combat parasitic infections and mediate allergies." },
+            { id: 59, category: "Hematology", question: "Basophils function by releasing:", options: ["Histamine", "Hemoglobin", "Fibrinogen", "Insulin"], answer: 0, explanation: "Basophils release histamine during inflammatory responses." },
+            { id: 60, category: "Hematology", question: "The symptom of pale skin due to reduced hemoglobin is called:", options: ["Pallor", "Cyanosis", "Jaundice", "Ecchymosis"], answer: 0, explanation: "Pallor is paleness of skin often seen in anemia." },
+            { id: 61, category: "Hematology", question: "Bluish discoloration of skin due to lack of oxygen is:", options: ["Cyanosis", "Pallor", "Jaundice", "Petechiae"], answer: 0, explanation: "Cyanosis indicates poor oxygenation." },
+            { id: 62, category: "Hematology", question: "Tiny, pinpoint bleeding spots on the skin are called:", options: ["Petechiae", "Ecchymosis", "Hematoma", "Goiter"], answer: 0, explanation: "Petechiae are tiny pinpoint hemorrhages." },
+            { id: 63, category: "Hematology", question: "A larger area of skin bruising or bleeding under skin is:", options: ["Ecchymosis", "Petechiae", "Thrombus", "Anemia"], answer: 0, explanation: "Ecchymosis is a larger bruise." },
+            { id: 64, category: "Hematology", question: "Yellowish discoloration of skin and eyes due to high bilirubin is:", options: ["Jaundice", "Cyanosis", "Pallor", "Erythema"], answer: 0, explanation: "Jaundice is yellowing caused by elevated bilirubin." },
+            { id: 65, category: "Hematology", question: "What does 'Hemostasis' mean?", options: ["Stopping bleeding", "Blood cell creation", "Destruction of blood", "Blood infection"], answer: 0, explanation: "Hemostasis is the process of stopping bleeding." },
+            { id: 66, category: "Hematology", question: "The administrative procedure of delivering donor blood to a patient is:", options: ["Blood transfusion", "Phlebotomy", "Chemotherapy", "Biopsy"], answer: 0, explanation: "Blood transfusion is administering blood/components into circulation." },
+            { id: 67, category: "Hematology", question: "The procedure of removing blood from a vein is called:", options: ["Phlebotomy", "Hemolysis", "Biopsy", "Dialysis"], answer: 0, explanation: "Phlebotomy is incision or puncture into a vein to draw blood." },
+            { id: 68, category: "Hematology", question: "A medical lab test abbreviated as 'CBC' stands for:", options: ["Complete Blood Count", "Cellular Blood Check", "Coagulation Blood Culture", "Central Blood Core"], answer: 0, explanation: "CBC stands for Complete Blood Count." },
+            { id: 69, category: "Hematology", question: "A condition characterized by a decrease in RBCs or hemoglobin is:", options: ["Anemia", "Leukemia", "Polycythemia", "Thrombosis"], answer: 0, explanation: "Anemia is deficiency of RBCs or Hb." },
+            { id: 70, category: "Hematology", question: "Cancer of blood-forming tissues in bone marrow is termed:", options: ["Leukemia", "Lymphoma", "Hemophilia", "Anemia"], answer: 0, explanation: "Leukemia is cancer involving blood cells and bone marrow." },
+            { id: 71, category: "Hematology", question: "Cancer originating specifically in lymphatic tissue is called:", options: ["Lymphoma", "Leukemia", "Anemia", "Myeloma"], answer: 0, explanation: "Lymphoma is cancer of the lymphatic system." },
+            { id: 72, category: "Hematology", question: "An inherited bleeding disorder caused by lack of clotting factors is:", options: ["Hemophilia", "Sickle Cell", "Polycythemia", "Leukopenia"], answer: 0, explanation: "Hemophilia causes prolonged bleeding due to clotting factor deficit." },
+            { id: 73, category: "Hematology", question: "An abnormally low platelet count is termed:", options: ["Thrombocytopenia", "Leukocytosis", "Polycythemia", "Hemoglobinuria"], answer: 0, explanation: "Thrombocytopenia means deficiency of platelets." },
+            { id: 74, category: "Hematology", question: "An inherited disorder causing abnormally crescent/sickle shaped RBCs is:", options: ["Sickle Cell Disease", "Hemophilia", "Thrombosis", "Leukemia"], answer: 0, explanation: "Sickle Cell Disease causes abnormal hemoglobin and deformed RBCs." },
+            { id: 75, category: "Hematology", question: "An abnormally increased RBC count is known as:", options: ["Polycythemia", "Anemia", "Leukopenia", "Pancytopenia"], answer: 0, explanation: "Polycythemia refers to excessive RBC production." },
+            { id: 76, category: "Hematology", question: "A decrease in ALL types of blood cells (RBCs, WBCs, platelets) is:", options: ["Pancytopenia", "Leukemia", "Hemolysis", "Polycythemia"], answer: 0, explanation: "'Pan-' (all) + 'cytopenia' (deficiency) = deficiency of all blood cells." },
+            { id: 77, category: "Hematology", question: "Abnormally low White Blood Cell count is called:", options: ["Leukopenia", "Leukocytosis", "Thrombocytosis", "Anemia"], answer: 0, explanation: "Leukopenia is low WBC count." },
+            { id: 78, category: "Hematology", question: "An abnormally HIGH White Blood Cell count is:", options: ["Leukocytosis", "Leukopenia", "Pancytopenia", "Hemophilia"], answer: 0, explanation: "Leukocytosis is an elevated WBC count." },
+            { id: 79, category: "Hematology", question: "Enlargement of lymph nodes is medically termed:", options: ["Lymphadenopathy", "Splenomegaly", "Hepatomegaly", "Lymphoma"], answer: 0, explanation: "Lymphadenopathy means disease/enlargement of lymph nodes." },
+            { id: 80, category: "Hematology", question: "Enlargement of the spleen is called:", options: ["Splenomegaly", "Hepatomegaly", "Cardiomegaly", "Adenoma"], answer: 0, explanation: "Splenomegaly means enlarged spleen." },
+            { id: 81, category: "Hematology", question: "Which abbreviation stands for Prothrombin Time?", options: ["PT", "INR", "Hb", "Hct"], answer: 0, explanation: "PT = Prothrombin Time, a test for blood clotting." },
+            { id: 82, category: "Hematology", question: "INR in blood coagulation testing stands for:", options: ["International Normalized Ratio", "Internal Normal Rate", "International Neutrophil Ratio", "Integrated Node Ratio"], answer: 0, explanation: "INR normalizes PT clotting test results." },
+            { id: 83, category: "Hematology", question: "Anticoagulant therapy is used to:", options: ["Prevent blood clotting", "Increase RBCs", "Kill bacteria", "Reduce pain"], answer: 0, explanation: "Anticoagulants prevent thrombus/clot formation." },
+            { id: 84, category: "Hematology", question: "Fatigue and weakness are common symptoms of:", options: ["Anemia", "Polycythemia", "Euglycemia", "Hypertension"], answer: 0, explanation: "Reduced oxygen capacity in anemia causes fatigue." },
+            { id: 85, category: "Hematology", question: "In nursing care, monitoring for bleeding signs is critical in patients with:", options: ["Thrombocytopenia", "Polycythemia", "Hyperthyroidism", "Gigantism"], answer: 0, explanation: "Low platelets increase bleeding risk." },
+            { id: 86, category: "Hematology", question: "Which term means medical treatment of cancer using chemical agents?", options: ["Chemotherapy", "Phlebotomy", "Hemostasis", "Dialysis"], answer: 0, explanation: "Chemotherapy uses drugs to destroy cancer cells." },
+            { id: 87, category: "Hematology", question: "The abbreviation 'WBC' stands for:", options: ["White Blood Cell", "Water Body Count", "Whole Blood Circulation", "Weight Base Check"], answer: 0, explanation: "WBC = White Blood Cell." },
+            { id: 88, category: "Hematology", question: "The abbreviation 'RBC' stands for:", options: ["Red Blood Cell", "Rapid Blood Clot", "Renal Blood Rate", "Relative Body Count"], answer: 0, explanation: "RBC = Red Blood Cell." },
+            { id: 89, category: "Hematology", question: "Which prefix combination in 'Pancytopenia' means 'all'?", options: ["Pan-", "Cyto-", "Penia-", "Poly-"], answer: 0, explanation: "'Pan-' is a prefix meaning all or entire." },
+            { id: 90, category: "Hematology", question: "Difficulty breathing is medically known as:", options: ["Dyspnea", "Apnea", "Eupnea", "Tachycardia"], answer: 0, explanation: "Dyspnea means difficult or laboring breathing." },
+
+            // --- ENDOCRINE SYSTEM (Questions 91 to 135) ---
+            { id: 91, category: "Endocrine", question: "The Endocrine System consists of glands that produce:", options: ["Hormones", "Enzymes", "Bile", "Mucus"], answer: 0, explanation: "Endocrine glands secrete hormones directly into the bloodstream." },
+            { id: 92, category: "Endocrine", question: "Which gland is called the 'Master Gland' of the body?", options: ["Pituitary gland", "Thyroid gland", "Adrenal gland", "Pancreas"], answer: 0, explanation: "The Pituitary gland controls many other endocrine glands." },
+            { id: 93, category: "Endocrine", question: "The Thyroid gland primarily controls body:", options: ["Metabolism", "Calcium balance", "Sleep cycle", "Digestion of fats"], answer: 0, explanation: "Thyroid hormones regulate metabolic rate." },
+            { id: 94, category: "Endocrine", question: "Parathyroid glands regulate the levels of which mineral in blood?", options: ["Calcium", "Sodium", "Iron", "Potassium"], answer: 0, explanation: "Parathyroid hormone (PTH) regulates blood calcium homeostasis." },
+            { id: 95, category: "Endocrine", question: "Which glands regulate the body's 'Stress Response'?", options: ["Adrenal glands", "Thyroid gland", "Pineal gland", "Parathyroid glands"], answer: 0, explanation: "Adrenal glands produce cortisol and adrenaline for stress." },
+            { id: 96, category: "Endocrine", question: "The Pancreas is responsible for regulating blood:", options: ["Glucose (sugar)", "Calcium", "Hemoglobin", "Cholesterol"], answer: 0, explanation: "Pancreas releases insulin and glucagon for blood sugar balance." },
+            { id: 97, category: "Endocrine", question: "Which gland secretes melatonin to regulate the sleep cycle?", options: ["Pineal gland", "Pituitary gland", "Thymus", "Thyroid"], answer: 0, explanation: "Pineal gland regulates circadian sleep cycles." },
+            { id: 98, category: "Endocrine", question: "Ovaries and Testes produce:", options: ["Reproductive hormones", "Thyroid hormones", "Insulin", "Growth hormone"], answer: 0, explanation: "Gonads produce estrogen, progesterone, and testosterone." },
+            { id: 99, category: "Endocrine", question: "The term 'Endocrine' breaks down into 'Endo-' (within) and '-crine' which means:", options: ["To secrete", "To absorb", "To build", "To destroy"], answer: 0, explanation: "'Endo' = inside, 'crine' = secrete." },
+            { id: 100, category: "Endocrine", question: "A chemical messenger secreted by endocrine glands into blood is a:", options: ["Hormone", "Neurotransmitter", "Enzyme", "Antigen"], answer: 0, explanation: "Hormones travel via bloodstream to target organs." },
+            { id: 101, category: "Endocrine", question: "The anterior pituitary gland is medically named:", options: ["Adenohypophysis", "Neurohypophysis", "Adrenal cortex", "Epiphysis"], answer: 0, explanation: "Adenohypophysis is the anterior lobe of the pituitary." },
+            { id: 102, category: "Endocrine", question: "The posterior pituitary gland is medically named:", options: ["Neurohypophysis", "Adenohypophysis", "Hypothalamus", "Thyroid"], answer: 0, explanation: "Neurohypophysis is the posterior lobe of pituitary." },
+            { id: 103, category: "Endocrine", question: "Excess growth hormone in ADULTS causes:", options: ["Acromegaly", "Gigantism", "Dwarfism", "Goiter"], answer: 0, explanation: "Acromegaly occurs when excess GH is secreted in adulthood." },
+            { id: 104, category: "Endocrine", question: "Excess growth hormone in CHILDREN causes:", options: ["Gigantism", "Acromegaly", "Dwarfism", "Myxedema"], answer: 0, explanation: "Gigantism happens during childhood growth phase." },
+            { id: 105, category: "Endocrine", question: "Deficiency of growth hormone in children leads to:", options: ["Dwarfism", "Gigantism", "Acromegaly", "Graves disease"], answer: 0, explanation: "GH deficiency causes short stature / dwarfism." },
+            { id: 106, category: "Endocrine", question: "Excessive or high blood sugar level is termed:", options: ["Hyperglycemia", "Hypoglycemia", "Euglycemia", "Glycosuria"], answer: 0, explanation: "Hyper- (high) + glycemia (blood sugar)." },
+            { id: 107, category: "Endocrine", question: "Low blood sugar level is termed:", options: ["Hypoglycemia", "Hyperglycemia", "Euglycemia", "Polyuria"], answer: 0, explanation: "Hypo- (low) + glycemia (blood sugar)." },
+            { id: 108, category: "Endocrine", question: "A normal blood sugar level is called:", options: ["Euglycemia", "Hyperglycemia", "Hypoglycemia", "Anemia"], answer: 0, explanation: "Eu- (normal) + glycemia." },
+            { id: 109, category: "Endocrine", question: "Excretion of excessive amount of urine is called:", options: ["Polyuria", "Anuria", "Dysuria", "Hematuria"], answer: 0, explanation: "Poly- (excessive) + uria (urine condition)." },
+            { id: 110, category: "Endocrine", question: "Presence of sugar/glucose in the urine is termed:", options: ["Glycosuria", "Hematuria", "Proteinuria", "Anuria"], answer: 0, explanation: "Glycosuria = glucose in urine." },
+            { id: 111, category: "Endocrine", question: "Surgical removal of the thyroid gland is called:", options: ["Thyroidectomy", "Thyroidotomy", "Adenoma", "Goiter"], answer: 0, explanation: "Thyroidectomy = surgical removal of thyroid." },
+            { id: 112, category: "Endocrine", question: "An enlargement of the thyroid gland visible in the neck is a:", options: ["Goiter", "Adenoma", "Polyp", "Cyst"], answer: 0, explanation: "Goiter is an enlarged thyroid gland." },
+            { id: 113, category: "Endocrine", question: "Excessive activity and secretion of thyroid hormone is:", options: ["Hyperthyroidism", "Hypothyroidism", "Myxedema", "Dwarfism"], answer: 0, explanation: "Hyperthyroidism = overactive thyroid." },
+            { id: 114, category: "Endocrine", question: "Deficient or low activity of thyroid hormone is:", options: ["Hypothyroidism", "Hyperthyroidism", "Thyrotoxicosis", "Gigantism"], answer: 0, explanation: "Hypothyroidism = underactive thyroid." },
+            { id: 115, category: "Endocrine", question: "An autoimmune form of hyperthyroidism is:", options: ["Graves disease", "Cushing disease", "Addison disease", "Diabetes"], answer: 0, explanation: "Graves disease causes autoimmune hyperthyroidism." },
+            { id: 116, category: "Endocrine", question: "Severe, advanced hypothyroidism in adults is called:", options: ["Myxedema", "Acromegaly", "Goiter", "Thyrotoxicosis"], answer: 0, explanation: "Myxedema is severe hypothyroidism." },
+            { id: 117, category: "Endocrine", question: "A toxic, extreme state of excess thyroid hormone is:", options: ["Thyrotoxicosis", "Euglycemia", "Hypoparathyroidism", "Goiter"], answer: 0, explanation: "Thyrotoxicosis is toxic thyroid overactivity." },
+            { id: 118, category: "Endocrine", question: "PTH stands for:", options: ["Parathyroid Hormone", "Pituitary Thyroid Hormone", "Pancreatic Total Hormone", "Plasma Thyroid Helper"], answer: 0, explanation: "PTH = Parathyroid Hormone." },
+            { id: 119, category: "Endocrine", question: "High level of calcium in the blood is called:", options: ["Hypercalcemia", "Hypocalcemia", "Hyperglycemia", "Hyperkalemia"], answer: 0, explanation: "Hyper- (high) + calc- (calcium) + -emia (blood)." },
+            { id: 120, category: "Endocrine", question: "Low level of calcium in the blood is called:", options: ["Hypocalcemia", "Hypercalcemia", "Hypoglycemia", "Hyponatremia"], answer: 0, explanation: "Hypo- (low) + calc- (calcium) + -emia." },
+            { id: 121, category: "Endocrine", question: "A benign tumor of a gland is called an:", options: ["Adenoma", "Adenopathy", "Adenitis", "Anemia"], answer: 0, explanation: "Aden/o (gland) + -oma (tumor) = Adenoma." },
+            { id: 122, category: "Endocrine", question: "Disease of the nerves often caused by chronic diabetes is:", options: ["Neuropathy", "Nephropathy", "Retinopathy", "Encephalopathy"], answer: 0, explanation: "Diabetic neuropathy affects nerves." },
+            { id: 123, category: "Endocrine", question: "Which hormone lowers blood sugar level?", options: ["Insulin", "Glucagon",
