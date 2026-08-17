@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="نظام محلي لإدارة حضور ونشاط الموظفين داخل مدعوم" />
+  <title>مدعوم — عمليات الموظفين</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/employee.css" />
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <aside class="sidebar" aria-label="التنقل الرئيسي">
+      <button class="brand" type="button" data-view="dashboard" aria-label="العودة إلى لوحة العمليات">
+        <svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M13 11v19c0 5 3 8 8 8s8-3 8-8V13"/><path class="warm" d="M21 10v16c0 4 3 6 6 6s6-2 6-6V14"/><path d="M29 10v12c0 3 2 5 5 5s5-2 5-5v-6"/></svg>
+        <span><small>مدعوم</small><strong>عمليات الموظفين</strong></span>
+      </button>
+      <div class="sidebar-rule"></div>
+      <nav class="nav-links">
+        <button class="active" type="button" data-view="dashboard"><span class="nav-icon">▦</span>لوحة العمليات</button>
+        <button type="button" data-view="reports"><span class="nav-icon">◫</span>التقارير</button>
+        <button type="button" data-view="audit"><span class="nav-icon">◌</span>سجل التدقيق</button>
+        <button type="button" data-view="settings"><span class="nav-icon">⚙</span>الإعدادات</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="session-brief"><small>الجلسة المحلية</small><span id="sidebar-status">لم تُعرّف بعد</span></div>
+        <button id="session-button" class="account-button" type="button"><span id="avatar" class="avatar">م</span><span><strong id="account-name">بدون مستخدم</strong><small id="account-role">أنشئ جلسة محلية</small></span></button>
+        <button id="logout-button" class="text-button danger" type="button">إنهاء الجلسة</button>
+      </div>
+    </aside>
+    <main class="workspace">
+      <header class="page-header">
+        <div><p id="page-eyebrow" class="eyebrow">مدعوم / عمليات الموظفين</p><h1 id="page-title">لوحة العمليات</h1><p id="page-subtitle">حالة الوردية والنشاط المرصود داخل هذه الواجهة فقط.</p></div>
+        <button id="theme-button" class="theme-button" type="button"><span aria-hidden="true">◐</span><span>داكن</span></button>
+      </header>
+      <div id="view-root"></div>
+    </main>
+  </div>
+  <dialog id="session-dialog" class="dialog">
+    <form id="session-form" method="dialog">
+      <header><div><p class="eyebrow">جلسة محلية داخل المتصفح</p><h2>عرّف جلسة العمل</h2></div><button class="icon-close" type="button" data-close-dialog aria-label="إغلاق">×</button></header>
+      <p class="dialog-copy">لا يتم التحقق من الهوية ولا إرسال أي بيانات إلى خادم. تحفظ هذه التجربة داخل متصفحك فقط.</p>
+      <label>اسم العرض<input id="display-name" required minlength="2" placeholder="اكتب الاسم الذي سيظهر في السجل" autocomplete="name" /></label>
+      <label>الدور ضمن الجلسة<select id="role"><option value="employee">موظف</option><option value="manager">الموارد البشرية / مدير</option><option value="super_admin">مسؤول أعلى</option></select></label>
+      <div class="dialog-actions"><button class="secondary-button" type="button" data-close-dialog>إلغاء</button><button class="primary-button" type="submit">فتح الجلسة المحلية</button></div>
+    </form>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="js/employee.js"></script>
+</body>
+</html>
